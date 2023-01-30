@@ -4,8 +4,7 @@
   "description": "npm module for rendering a game state.",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -19,12 +18,5 @@
   "homepage": "https://github.com/CIS-400/settlers-ui#readme",
   "dependencies": {
     "pixi.js": "^7.1.1"
-  },
-  "devDependencies": {
-    "@types/pixi.js": "^5.0.0",
-    "parcel": "^2.8.3",
-    "parcel-bundler": "^1.6.1",
-    "punycode": "^1.4.1",
-    "typescript": "^4.9.5"
   }
 }
