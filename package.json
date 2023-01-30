@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/CIS-400/settlers-ui/issues"
   },
-  "homepage": "https://github.com/CIS-400/settlers-ui#readme"
+  "homepage": "https://github.com/CIS-400/settlers-ui#readme",
+  "dependencies": {
+    "pixi.js": "^7.1.1"
+  }
 }
