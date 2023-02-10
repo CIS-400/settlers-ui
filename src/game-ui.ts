@@ -106,6 +106,52 @@ class GameUI {
     console.log(`node ${node} clicked`);
   }
 
+  displayPlayerInfo() {
+    this.game.players.map((p, index) => {
+      const victoryPs = new PIXI.Text(p.victoryPoints, {
+        fontFamily: "Arial",
+        fontSize: 24,
+        fill: 0xdb04e9,
+        align: "right",
+      });
+      victoryPs.x = 500;
+      this.app.stage.addChild(victoryPs);
+
+      const numDevCards = new PIXI.Text(p.devCards.size(), {
+        fontFamily: "Arial",
+        fontSize: 24,
+        fill: 0xdb04e9,
+        align: "right",
+      });
+      this.app.stage.addChild(numDevCards);
+
+      const numCardsHand = new PIXI.Text(p.resources.size(), {
+        fontFamily: "Arial",
+        fontSize: 24,
+        fill: 0xdb04e9,
+        align: "right",
+      });
+      this.app.stage.addChild(numCardsHand);
+
+      const knightsPlayed = new PIXI.Text(p.knightsPlayed, {
+        fontFamily: "Arial",
+        fontSize: 50,
+        fill: 0xff1010,
+        align: "left",
+      });
+      knightsPlayed.x = 10;
+      this.app.stage.addChild(knightsPlayed);
+
+      const numLongestRoad = new PIXI.Text(this.game.board.getLongestRoad(index), {
+        fontFamily: "Arial",
+        fontSize: 50,
+        fill: 0xff1010,
+        align: "left",
+      });
+      this.app.stage.addChild(knightsPlayed);
+    });
+  }
+
   getUI() {
     return this.app.view;
   }
