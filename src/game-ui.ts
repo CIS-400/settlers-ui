@@ -6,6 +6,7 @@ class GameUI {
   private readonly game: Game;
   private readonly app: PIXI.Application<PIXI.ICanvas>;
   private readonly nodeSprites: PIXI.Sprite[];
+  private textures: Record<string, any>;
 
   constructor(game: Game) {
     this.game = game;
@@ -17,11 +18,13 @@ class GameUI {
     this.app.stage.interactive = true;
     this.nodeSprites = [];
     this.handleNodeClick = this.handleNodeClick.bind(this);
-
-    this.initialize();
+    this.loadTextures().then((textures) => {
+      this.textures = textures;
+      this.initialize();
+    });
   }
 
-  async initialize() {
+  initialize() {
     const HEX_CROSS = 5; // hexes across middle row
     const w = 90; // width in user units
     const x_offset = 0.5 * (100 - w);
@@ -37,11 +40,11 @@ class GameUI {
     let row = 0;
     let rx = x;
     let ry = y;
-    const texture = await PIXI.Assets.load(require("../assets/wood-tile.svg"));
 
     // initialize nodes
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      const ns = new PIXI.Sprite(texture);
+      const ns = new PIXI.Sprite(this.textures["lumber_tile"]);
+      ns.interactive = true;
       ns.onclick = () => this.handleNodeClick(i);
       ns.anchor.set(0.5);
       ns.position.set(8 * (x + x_offset), 8 * (y + y_offset));
@@ -83,6 +86,27 @@ class GameUI {
 
   getUI() {
     return this.app.view;
+  }
+
+  async loadTextures() {
+    return {
+      brick_tile: await PIXI.Assets.load(
+        require("../assets/tiles/brick_tile.svg")
+      ),
+      desert_tile: await PIXI.Assets.load(
+        require("../assets/tiles/desert_without_robber.svg")
+      ),
+      ore_tile: await PIXI.Assets.load(require("../assets/tiles/ore_tile.svg")),
+      grain_tile: await PIXI.Assets.load(
+        require("../assets/tiles/wheat_tile.svg")
+      ),
+      lumber_tile: await PIXI.Assets.load(
+        require("../assets/tiles/wood_tile.svg")
+      ),
+      wool_tile: await PIXI.Assets.load(
+        require("../assets/tiles/wool_tile.svg")
+      ),
+    };
   }
 }
 
