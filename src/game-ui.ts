@@ -6,6 +6,7 @@ class GameUI {
   private readonly game: Game;
   private readonly app: PIXI.Application<PIXI.ICanvas>;
   private readonly nodeSprites: PIXI.Sprite[];
+  private readonly tileSprites: PIXI.Sprite[];
   private textures: Record<string, any>;
 
   constructor(game: Game) {
@@ -17,6 +18,7 @@ class GameUI {
     });
     this.app.stage.interactive = true;
     this.nodeSprites = [];
+    this.tileSprites = [];
     this.handleNodeClick = this.handleNodeClick.bind(this);
     this.loadTextures().then((textures) => {
       this.textures = textures;
@@ -43,7 +45,7 @@ class GameUI {
 
     // initialize nodes
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      const ns = new PIXI.Sprite(this.textures["lumber_tile"]);
+      const ns = new PIXI.Sprite();
       ns.interactive = true;
       ns.onclick = () => this.handleNodeClick(i);
       ns.anchor.set(0.5);
@@ -67,6 +69,26 @@ class GameUI {
       }
     }
     this.app.stage.addChild(...this.nodeSprites);
+
+    // initialize tiles
+    for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
+      const tile = this.game.getTile(i);
+      const nodes = tile.nodes;
+      let x =
+        0.5 * (this.nodeSprites[nodes[0]].x + this.nodeSprites[nodes[5]].x);
+      let y =
+        0.5 * (this.nodeSprites[nodes[0]].y + this.nodeSprites[nodes[5]].y);
+      const ts = new PIXI.Sprite(
+        this.textures[`${SETTLERS.resStr(tile.resource)}_tile`]
+      );
+      ts.interactive = true;
+      ts.onclick = () => this.handleNodeClick(i);
+      ts.anchor.set(0.5);
+      ts.scale.set(3);
+      ts.position.set(x, y);
+      this.tileSprites.push(ts);
+    }
+    this.app.stage.addChild(...this.tileSprites);
   }
 
   render() {
@@ -93,7 +115,7 @@ class GameUI {
       brick_tile: await PIXI.Assets.load(
         require("../assets/tiles/brick_tile.svg")
       ),
-      desert_tile: await PIXI.Assets.load(
+      none_tile: await PIXI.Assets.load(
         require("../assets/tiles/desert_without_robber.svg")
       ),
       ore_tile: await PIXI.Assets.load(require("../assets/tiles/ore_tile.svg")),
