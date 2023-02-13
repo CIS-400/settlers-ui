@@ -47,7 +47,8 @@ class GameUI {
 
     // initialize nodes
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      const ns = new PIXI.Sprite();
+      const ns = new PIXI.Sprite(this.textures[`settlement_0`]);
+      ns.hitArea = new PIXI.Circle(0, 0, 50);
       ns.interactive = true;
       ns.on("click", () => this.handleNodeClick(i));
       ns.anchor.set(0.5);
@@ -70,8 +71,6 @@ class GameUI {
         y += 0.5 * s * (col % 2 === (row < halfRowSize ? 1 : 0) ? -1 : 1);
       }
     }
-    this.app.stage.addChild(...this.nodeSprites);
-
     // initialize tiles and tokesn
     for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
       const tile = this.game.getTile(i);
@@ -97,7 +96,11 @@ class GameUI {
       toks.position.set(x, y - 35);
       this.tokenSprites.push(toks);
     }
-    this.app.stage.addChild(...this.tileSprites, ...this.tokenSprites);
+    this.app.stage.addChild(
+      ...this.tileSprites,
+      ...this.tokenSprites,
+      ...this.nodeSprites
+    );
   }
 
   render() {
@@ -200,6 +203,9 @@ class GameUI {
       no_10: await PIXI.Assets.load(require("../assets/numbers/no_10.png")),
       no_11: await PIXI.Assets.load(require("../assets/numbers/no_11.png")),
       no_12: await PIXI.Assets.load(require("../assets/numbers/no_12.png")),
+      settlement_0: await PIXI.Assets.load(
+        require("../assets/settlements/settlement_0.png")
+      ),
     };
   }
 }
