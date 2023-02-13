@@ -7,6 +7,7 @@ class GameUI {
   private readonly app: PIXI.Application<PIXI.ICanvas>;
   private readonly nodeSprites: PIXI.Sprite[];
   private readonly tileSprites: PIXI.Sprite[];
+  private readonly tokenSprites: PIXI.Sprite[];
   private textures: Record<string, any>;
 
   constructor(game: Game) {
@@ -16,10 +17,11 @@ class GameUI {
       height: 800,
       backgroundColor: "#78bac2",
     });
-    this.app.stage.interactive = true;
     this.nodeSprites = [];
     this.tileSprites = [];
+    this.tokenSprites = [];
     this.handleNodeClick = this.handleNodeClick.bind(this);
+    this.handleTileClick = this.handleTileClick.bind(this);
     this.loadTextures().then((textures) => {
       this.textures = textures;
       this.initialize();
@@ -47,7 +49,7 @@ class GameUI {
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
       const ns = new PIXI.Sprite();
       ns.interactive = true;
-      ns.onclick = () => this.handleNodeClick(i);
+      ns.on("click", () => this.handleNodeClick(i));
       ns.anchor.set(0.5);
       ns.position.set(8 * (x + x_offset), 8 * (y + y_offset));
       this.nodeSprites.push(ns);
@@ -70,10 +72,11 @@ class GameUI {
     }
     this.app.stage.addChild(...this.nodeSprites);
 
-    // initialize tiles
+    // initialize tiles and tokesn
     for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
       const tile = this.game.getTile(i);
       const nodes = tile.nodes;
+      const num = tile.getNumber();
       let x =
         0.5 * (this.nodeSprites[nodes[0]].x + this.nodeSprites[nodes[5]].x);
       let y =
@@ -82,13 +85,19 @@ class GameUI {
         this.textures[`${SETTLERS.resStr(tile.resource)}_tile`]
       );
       ts.interactive = true;
-      ts.onclick = () => this.handleNodeClick(i);
+      ts.on("click", () => this.handleTileClick(i));
       ts.anchor.set(0.5);
-      ts.scale.set(3);
       ts.position.set(x, y);
       this.tileSprites.push(ts);
+
+      const toks = new PIXI.Sprite(
+        this.textures[num == 7 ? `robber` : `no_${num}`]
+      );
+      toks.anchor.set(0.5);
+      toks.position.set(x, y - 35);
+      this.tokenSprites.push(toks);
     }
-    this.app.stage.addChild(...this.tileSprites);
+    this.app.stage.addChild(...this.tileSprites, ...this.tokenSprites);
   }
 
   render() {
@@ -104,6 +113,9 @@ class GameUI {
 
   handleNodeClick(node: number) {
     console.log(`node ${node} clicked`);
+  }
+  handleTileClick(tile: number) {
+    console.log(`tile ${tile} clicked`);
   }
 
   displayPlayerInfo() {
@@ -142,12 +154,15 @@ class GameUI {
       knightsPlayed.x = 10;
       this.app.stage.addChild(knightsPlayed);
 
-      const numLongestRoad = new PIXI.Text(this.game.board.getLongestRoad(index), {
-        fontFamily: "Arial",
-        fontSize: 50,
-        fill: 0xff1010,
-        align: "left",
-      });
+      const numLongestRoad = new PIXI.Text(
+        this.game.board.getLongestRoad(index),
+        {
+          fontFamily: "Arial",
+          fontSize: 50,
+          fill: 0xff1010,
+          align: "left",
+        }
+      );
       this.app.stage.addChild(knightsPlayed);
     });
   }
@@ -159,21 +174,32 @@ class GameUI {
   async loadTextures() {
     return {
       brick_tile: await PIXI.Assets.load(
-        require("../assets/tiles/brick_tile.svg")
+        require("../assets/tiles/brick_tile.png")
       ),
       none_tile: await PIXI.Assets.load(
-        require("../assets/tiles/desert_without_robber.svg")
+        require("../assets/tiles/desert_without_robber.png")
       ),
-      ore_tile: await PIXI.Assets.load(require("../assets/tiles/ore_tile.svg")),
+      ore_tile: await PIXI.Assets.load(require("../assets/tiles/ore_tile.png")),
       grain_tile: await PIXI.Assets.load(
-        require("../assets/tiles/wheat_tile.svg")
+        require("../assets/tiles/wheat_tile.png")
       ),
       lumber_tile: await PIXI.Assets.load(
-        require("../assets/tiles/wood_tile.svg")
+        require("../assets/tiles/wood_tile.png")
       ),
       wool_tile: await PIXI.Assets.load(
-        require("../assets/tiles/wool_tile.svg")
+        require("../assets/tiles/wool_tile.png")
       ),
+      robber: await PIXI.Assets.load(require("../assets/robber.png")),
+      no_2: await PIXI.Assets.load(require("../assets/numbers/no_2.png")),
+      no_3: await PIXI.Assets.load(require("../assets/numbers/no_3.png")),
+      no_4: await PIXI.Assets.load(require("../assets/numbers/no_4.png")),
+      no_5: await PIXI.Assets.load(require("../assets/numbers/no_5.png")),
+      no_6: await PIXI.Assets.load(require("../assets/numbers/no_6.png")),
+      no_8: await PIXI.Assets.load(require("../assets/numbers/no_8.png")),
+      no_9: await PIXI.Assets.load(require("../assets/numbers/no_9.png")),
+      no_10: await PIXI.Assets.load(require("../assets/numbers/no_10.png")),
+      no_11: await PIXI.Assets.load(require("../assets/numbers/no_11.png")),
+      no_12: await PIXI.Assets.load(require("../assets/numbers/no_12.png")),
     };
   }
 }
