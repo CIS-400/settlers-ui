@@ -8,7 +8,7 @@ class GameUI {
   private readonly nodeSprites: PIXI.Sprite[];
   private readonly tileSprites: PIXI.Sprite[];
   private readonly tokenSprites: PIXI.Sprite[];
-  private readonly edgeSprites: PIXI.Sprite[];
+  private readonly edgeSpriteMap: Map<[number, number], PIXI.Sprite>;
   private textures: Record<string, any>;
 
   constructor(game: Game) {
@@ -21,8 +21,10 @@ class GameUI {
     this.nodeSprites = [];
     this.tileSprites = [];
     this.tokenSprites = [];
+    this.edgeSpriteMap = new Map();
     this.handleNodeClick = this.handleNodeClick.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
+    this.handleEdgeClick = this.handleEdgeClick.bind(this);
     this.loadTextures().then((textures) => {
       this.textures = textures;
       this.initialize();
@@ -72,30 +74,56 @@ class GameUI {
         y += 0.5 * s * (col % 2 === (row < halfRowSize ? 1 : 0) ? -1 : 1);
       }
     }
-    // // initialize edges
-    // // Establish our connections.
-    // rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
-    // const downOffset = [8, 10, 11, 10, 8];
-    // col = 0;
-    // row = 0;
-    // for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-    //   // establish the connection between node and its right node
-    //   if (col + 1 !== rowSize[row]) {
-    //     edges.push([i, i + 1]);
-    //   }
-    //   // establish the conneciton between node and its downward node
-    //   if (row < 3 && col % 2 === 0) {
-    //     edges.push([i, i + downOffset[row]]);
-    //   } else if ((row === 3 || row === 4) && col % 2 === 1) {
-    //     edges.push([i, i + downOffset[row]]);
-    //   }
-
-    //   col++;
-    //   if (col === rowSize[row]) {
-    //     col = 0;
-    //     row++;
-    //   }
-    // }
+    // initialize edges
+    // Establish our connections.
+    rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
+    const downOffset = [8, 10, 11, 10, 8];
+    col = 0;
+    row = 0;
+    let es: PIXI.Sprite;
+    for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
+      // establish the connection between node and its right node
+      if (col + 1 !== rowSize[row]) {
+        es = new PIXI.Sprite(this.textures[`road_0`]);
+        es.interactive = true;
+        es.on("click", () => this.handleEdgeClick([i, i + 1]));
+        es.anchor.set(0.5);
+        es.rotation = this.getAngle(
+          [this.nodeSprites[i].x, this.nodeSprites[i].y],
+          [this.nodeSprites[i + 1].x, this.nodeSprites[i + 1].y]
+        );
+        es.position.set(
+          (this.nodeSprites[i].x + this.nodeSprites[i + 1].x) / 2,
+          (this.nodeSprites[i].y + this.nodeSprites[i + 1].y) / 2
+        );
+        this.edgeSpriteMap.set([i, i + 1], es);
+      }
+      // establish the conneciton between node and its downward node
+      if (
+        (row < 3 && col % 2 === 0) ||
+        ((row === 3 || row === 4) && col % 2 === 1)
+      ) {
+        const [e1, e2] = [i, i + downOffset[row]];
+        es = new PIXI.Sprite(this.textures[`road_0`]);
+        es.interactive = true;
+        es.on("click", () => this.handleEdgeClick([e1, e2]));
+        es.anchor.set(0.5);
+        es.rotation = this.getAngle(
+          [this.nodeSprites[e1].x, this.nodeSprites[e1].y],
+          [this.nodeSprites[e2].x, this.nodeSprites[e2].y]
+        );
+        es.position.set(
+          (this.nodeSprites[e1].x + this.nodeSprites[e2].x) / 2,
+          (this.nodeSprites[e1].y + this.nodeSprites[e2].y) / 2
+        );
+        this.edgeSpriteMap.set([e1, e2], es);
+      }
+      col++;
+      if (col === rowSize[row]) {
+        col = 0;
+        row++;
+      }
+    }
     // initialize tiles and tokesn
     for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
       const tile = this.game.getTile(i);
@@ -133,7 +161,8 @@ class GameUI {
       backdrop,
       ...this.tileSprites,
       ...this.tokenSprites,
-      ...this.nodeSprites
+      ...this.nodeSprites,
+      ...this.edgeSpriteMap.values()
     );
 
     // initialize bank
@@ -142,25 +171,25 @@ class GameUI {
     for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
       const resource = i as SETTLERS.Resource;
       const resourceStr = SETTLERS.resStr(resource);
-      if (resourceStr !== "None") {
-        const cardChild = new PIXI.Sprite(
-          this.textures[`${resourceStr.toLowerCase()}_card`]
-        );
-        const numInBank = this.game.bank.get(resource);
+      if (resourceStr === "none") continue;
 
-        cardChild.anchor.set(0.5);
-        cardChild.position.set((i + 1) * 50 + 500, 500);
+      const cardChild = new PIXI.Sprite(
+        this.textures[`${resourceStr.toLowerCase()}_card`]
+      );
+      const numInBank = this.game.bank.get(resource);
 
-        const numInBankSprite = new PIXI.Text(numInBank, {
-          fontFamily: "Arial",
-          fontSize: 24,
-          fill: 0xdb04e9,
-          align: "right",
-        });
-        numInBankSprite.position.set((i + 1) * 50 + 480, 520);
-        this.app.stage.addChild(numInBankSprite);
-        this.app.stage.addChild(cardChild);
-      }
+      cardChild.anchor.set(0.5);
+      cardChild.position.set((i + 1) * 50 + 500, 500);
+
+      const numInBankSprite = new PIXI.Text(numInBank, {
+        fontFamily: "Arial",
+        fontSize: 24,
+        fill: 0xdb04e9,
+        align: "right",
+      });
+      numInBankSprite.position.set((i + 1) * 50 + 480, 520);
+      this.app.stage.addChild(numInBankSprite);
+      this.app.stage.addChild(cardChild);
     }
   }
 
@@ -180,6 +209,9 @@ class GameUI {
   }
   handleTileClick(tile: number) {
     console.log(`tile ${tile} clicked`);
+  }
+  handleEdgeClick([n0, n1]: [number, number]) {
+    console.log(`edge (${n0}, ${n1}) clicked`);
   }
 
   displayPlayerInfo() {
@@ -257,6 +289,10 @@ class GameUI {
         require("../assets/tiles/wool_tile.png")
       ),
       robber: await PIXI.Assets.load(require("../assets/robber.png")),
+      road_0: await PIXI.Assets.load(require("../assets/roads/road_0.png")),
+      road_1: await PIXI.Assets.load(require("../assets/roads/road_1.png")),
+      road_2: await PIXI.Assets.load(require("../assets/roads/road_2.png")),
+      road_3: await PIXI.Assets.load(require("../assets/roads/road_3.png")),
       no_2: await PIXI.Assets.load(require("../assets/numbers/no_2.png")),
       no_3: await PIXI.Assets.load(require("../assets/numbers/no_3.png")),
       no_4: await PIXI.Assets.load(require("../assets/numbers/no_4.png")),
@@ -289,6 +325,15 @@ class GameUI {
       ),
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
     };
+  }
+
+  private getAngle(
+    [x1, y1]: [number, number],
+    [x2, y2]: [number, number]
+  ): number {
+    const deltaX = x2 - x1;
+    const deltaY = y2 - y1;
+    return Math.atan2(deltaY, deltaX);
   }
 }
 
