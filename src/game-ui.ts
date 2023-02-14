@@ -96,11 +96,61 @@ class GameUI {
       toks.position.set(x, y - 35);
       this.tokenSprites.push(toks);
     }
+<<<<<<< HEAD
     this.app.stage.addChild(
       ...this.tileSprites,
       ...this.tokenSprites,
       ...this.nodeSprites
     );
+=======
+    this.app.stage.addChild(...this.tileSprites);
+
+    // initialize bank
+    // TODO insert bank picture
+    // insert the cards
+    for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
+      const resource = i as SETTLERS.Resource
+      const resourceStr = SETTLERS.resStr(resource)
+      if (resourceStr !== 'None') {
+        const cardChild = new PIXI.Sprite(this.textures[`${resourceStr.toLowerCase()}_card`]);
+        const numInBank = this.game.bank.get(resource)
+
+        cardChild.anchor.set(0.5);
+        cardChild.position.set((i + 1) * 50 + 500, 500);
+
+        const numInBankSprite = new PIXI.Text(numInBank, {
+          fontFamily: "Arial",
+          fontSize: 24,
+          fill: 0xdb04e9,
+          align: "right",
+        });
+        numInBankSprite.position.set((i + 1) * 50 + 480, 520);
+        this.app.stage.addChild(numInBankSprite);
+        this.app.stage.addChild(cardChild);
+      }
+    }
+
+
+    for (const r in SETTLERS.Resource) {
+      console.log(r)
+      if (isNaN(Number(r)) && r !== 'None') {
+        const cardChild = new PIXI.Sprite(this.textures[`${r.toLowerCase()}_card`]);
+        const numInBank = this.game.bank.get(r)
+
+
+        const numInBankSprite = new PIXI.Text(numInBank, {
+          fontFamily: "Arial",
+          fontSize: 24,
+          fill: 0xdb04e9,
+          align: "right",
+        });
+        numInBankSprite.position.set((index + 1) * 50 + 500, 520);
+        this.app.stage.addChild(numInBankSprite);
+        this.app.stage.addChild(cardChild);
+        index++;
+      }
+    }
+>>>>>>> c540708 (show bank cards)
   }
 
   render() {
@@ -123,6 +173,8 @@ class GameUI {
 
   displayPlayerInfo() {
     this.game.players.map((p, index) => {
+      // TODO: display player names
+
       const victoryPs = new PIXI.Text(p.victoryPoints, {
         fontFamily: "Arial",
         fontSize: 24,
@@ -157,6 +209,7 @@ class GameUI {
       knightsPlayed.x = 10;
       this.app.stage.addChild(knightsPlayed);
 
+<<<<<<< HEAD
       const numLongestRoad = new PIXI.Text(
         this.game.board.getLongestRoad(index),
         {
@@ -167,6 +220,15 @@ class GameUI {
         }
       );
       this.app.stage.addChild(knightsPlayed);
+=======
+      const numLongestRoad = new PIXI.Text(this.game.board.getLongestRoad(index), {
+        fontFamily: "Arial",
+        fontSize: 50,
+        fill: 0xff1010,
+        align: "left",
+      });
+      this.app.stage.addChild(numLongestRoad);
+>>>>>>> c540708 (show bank cards)
     });
   }
 
@@ -176,6 +238,7 @@ class GameUI {
 
   async loadTextures() {
     return {
+      // tiles
       brick_tile: await PIXI.Assets.load(
         require("../assets/tiles/brick_tile.png")
       ),
@@ -205,6 +268,23 @@ class GameUI {
       no_12: await PIXI.Assets.load(require("../assets/numbers/no_12.png")),
       settlement_0: await PIXI.Assets.load(
         require("../assets/settlements/settlement_0.png")
+      ),
+
+      // cards
+      brick_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/brick_card.svg")
+      ),
+      lumber_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/wood_card.svg")
+      ),
+      wool_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/wool_card.svg")
+      ),
+      grain_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/wheat_card.svg")
+      ),
+      ore_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/ore_card.svg")
       ),
     };
   }
