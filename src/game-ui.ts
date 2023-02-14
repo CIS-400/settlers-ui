@@ -97,7 +97,6 @@ class GameUI {
       this.tokenSprites.push(toks);
     }
     this.app.stage.addChild(
-      ...this.tileSprites,
       ...this.tokenSprites,
       ...this.nodeSprites
     );
@@ -125,27 +124,6 @@ class GameUI {
         numInBankSprite.position.set((i + 1) * 50 + 480, 520);
         this.app.stage.addChild(numInBankSprite);
         this.app.stage.addChild(cardChild);
-      }
-    }
-
-
-    for (const r in SETTLERS.Resource) {
-      console.log(r)
-      if (isNaN(Number(r)) && r !== 'None') {
-        const cardChild = new PIXI.Sprite(this.textures[`${r.toLowerCase()}_card`]);
-        const numInBank = this.game.bank.get(r)
-
-
-        const numInBankSprite = new PIXI.Text(numInBank, {
-          fontFamily: "Arial",
-          fontSize: 24,
-          fill: 0xdb04e9,
-          align: "right",
-        });
-        numInBankSprite.position.set((index + 1) * 50 + 500, 520);
-        this.app.stage.addChild(numInBankSprite);
-        this.app.stage.addChild(cardChild);
-        index++;
       }
     }
   }
@@ -215,7 +193,7 @@ class GameUI {
           align: "left",
         }
       );
-      this.app.stage.addChild(knightsPlayed);
+      this.app.stage.addChild(numLongestRoad);
     });
   }
 
