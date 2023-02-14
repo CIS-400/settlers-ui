@@ -123,21 +123,30 @@ class GameUI {
       toks.position.set(x, y - 30);
       this.tokenSprites.push(toks);
     }
+
+    const backdrop = new PIXI.Sprite(this.textures["backdrop"]);
+    backdrop.scale.set(0.25);
+    backdrop.anchor.set(0.5);
+    backdrop.position.set(400);
+
     this.app.stage.addChild(
+      backdrop,
+      ...this.tileSprites,
       ...this.tokenSprites,
       ...this.nodeSprites
     );
-    this.app.stage.addChild(...this.tileSprites);
 
     // initialize bank
     // TODO insert bank picture
     // insert the cards
     for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
-      const resource = i as SETTLERS.Resource
-      const resourceStr = SETTLERS.resStr(resource)
-      if (resourceStr !== 'None') {
-        const cardChild = new PIXI.Sprite(this.textures[`${resourceStr.toLowerCase()}_card`]);
-        const numInBank = this.game.bank.get(resource)
+      const resource = i as SETTLERS.Resource;
+      const resourceStr = SETTLERS.resStr(resource);
+      if (resourceStr !== "None") {
+        const cardChild = new PIXI.Sprite(
+          this.textures[`${resourceStr.toLowerCase()}_card`]
+        );
+        const numInBank = this.game.bank.get(resource);
 
         cardChild.anchor.set(0.5);
         cardChild.position.set((i + 1) * 50 + 500, 500);
@@ -278,6 +287,7 @@ class GameUI {
       ore_card: await PIXI.Assets.load(
         require("../assets/resource_cards/ore_card.svg")
       ),
+      backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
     };
   }
 }
