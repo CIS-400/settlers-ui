@@ -8,6 +8,7 @@ class GameUI {
   private readonly nodeSprites: PIXI.Sprite[];
   private readonly tileSprites: PIXI.Sprite[];
   private readonly tokenSprites: PIXI.Sprite[];
+  private readonly edgeSprites: PIXI.Sprite[];
   private textures: Record<string, any>;
 
   constructor(game: Game) {
@@ -30,15 +31,15 @@ class GameUI {
 
   initialize() {
     const HEX_CROSS = 5; // hexes across middle row
-    const w = 90; // width in user units
+    const w = 80; // width in user units
     const x_offset = 0.5 * (100 - w);
-    const h = 90; // height in user units
+    const h = 80; // height in user units
     const y_offset = 0.5 * (100 - h);
     const root3 = Math.sqrt(3);
     const s = w / (HEX_CROSS * root3); // side length
     let y = 0.5 * h - 3.5 * s; // starting y so that nodes are vertically aligned
     let x = 0.5 * w - 1.5 * root3 * s; // starting x so that nodes are horizontally aligned
-    const rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
+    let rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
     const halfRowSize = Math.floor(rowSize.length / 2);
     let col = 0;
     let row = 0;
@@ -47,7 +48,7 @@ class GameUI {
 
     // initialize nodes
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      const ns = new PIXI.Sprite(this.textures[`settlement_0`]);
+      const ns = new PIXI.Sprite();
       ns.hitArea = new PIXI.Circle(0, 0, 50);
       ns.interactive = true;
       ns.on("click", () => this.handleNodeClick(i));
@@ -71,6 +72,30 @@ class GameUI {
         y += 0.5 * s * (col % 2 === (row < halfRowSize ? 1 : 0) ? -1 : 1);
       }
     }
+    // // initialize edges
+    // // Establish our connections.
+    // rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
+    // const downOffset = [8, 10, 11, 10, 8];
+    // col = 0;
+    // row = 0;
+    // for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
+    //   // establish the connection between node and its right node
+    //   if (col + 1 !== rowSize[row]) {
+    //     edges.push([i, i + 1]);
+    //   }
+    //   // establish the conneciton between node and its downward node
+    //   if (row < 3 && col % 2 === 0) {
+    //     edges.push([i, i + downOffset[row]]);
+    //   } else if ((row === 3 || row === 4) && col % 2 === 1) {
+    //     edges.push([i, i + downOffset[row]]);
+    //   }
+
+    //   col++;
+    //   if (col === rowSize[row]) {
+    //     col = 0;
+    //     row++;
+    //   }
+    // }
     // initialize tiles and tokesn
     for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
       const tile = this.game.getTile(i);
@@ -85,6 +110,7 @@ class GameUI {
       );
       ts.interactive = true;
       ts.on("click", () => this.handleTileClick(i));
+      ts.scale.set(0.9);
       ts.anchor.set(0.5);
       ts.position.set(x, y);
       this.tileSprites.push(ts);
@@ -92,8 +118,9 @@ class GameUI {
       const toks = new PIXI.Sprite(
         this.textures[num == 7 ? `robber` : `no_${num}`]
       );
+      toks.scale.set(0.9);
       toks.anchor.set(0.5);
-      toks.position.set(x, y - 35);
+      toks.position.set(x, y - 30);
       this.tokenSprites.push(toks);
     }
     this.app.stage.addChild(
