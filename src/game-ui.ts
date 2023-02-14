@@ -96,13 +96,11 @@ class GameUI {
       toks.position.set(x, y - 35);
       this.tokenSprites.push(toks);
     }
-<<<<<<< HEAD
     this.app.stage.addChild(
       ...this.tileSprites,
       ...this.tokenSprites,
       ...this.nodeSprites
     );
-=======
     this.app.stage.addChild(...this.tileSprites);
 
     // initialize bank
@@ -150,7 +148,6 @@ class GameUI {
         index++;
       }
     }
->>>>>>> c540708 (show bank cards)
   }
 
   render() {
@@ -209,7 +206,6 @@ class GameUI {
       knightsPlayed.x = 10;
       this.app.stage.addChild(knightsPlayed);
 
-<<<<<<< HEAD
       const numLongestRoad = new PIXI.Text(
         this.game.board.getLongestRoad(index),
         {
@@ -220,15 +216,6 @@ class GameUI {
         }
       );
       this.app.stage.addChild(knightsPlayed);
-=======
-      const numLongestRoad = new PIXI.Text(this.game.board.getLongestRoad(index), {
-        fontFamily: "Arial",
-        fontSize: 50,
-        fill: 0xff1010,
-        align: "left",
-      });
-      this.app.stage.addChild(numLongestRoad);
->>>>>>> c540708 (show bank cards)
     });
   }
 
