@@ -3,20 +3,22 @@ import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 
 class GameUI {
-  private readonly game: Game;
-  private readonly app: PIXI.Application<PIXI.ICanvas>;
+  static DEFAULT_WIDTH = 1000;
+  static DEFAULT_HEIGHT = 0.8 * GameUI.DEFAULT_WIDTH;
+  static BOARD_HEIGHT_RATIO = 0.85;
+  readonly game: Game;
+  readonly app: PIXI.Application<PIXI.ICanvas>;
   private readonly nodeSprites: PIXI.Sprite[];
   private readonly tileSprites: PIXI.Sprite[];
   private readonly tokenSprites: PIXI.Sprite[];
   private readonly edgeSpriteMap: Map<[number, number], PIXI.Sprite>;
-  private textures: Record<string, any>;
+  textures: Record<string, any>;
 
-  constructor(game: Game) {
+  constructor(game: Game, container: HTMLElement) {
     this.game = game;
     this.app = new PIXI.Application({
-      width: 800,
-      height: 800,
       backgroundColor: "#78bac2",
+      resizeTo: container,
     });
     this.nodeSprites = [];
     this.tileSprites = [];
@@ -32,6 +34,12 @@ class GameUI {
   }
 
   initialize() {
+    const { width, height } = this.app.view;
+    const board = new PIXI.Container();
+    const boardheight = GameUI.BOARD_HEIGHT_RATIO * height;
+    const boardwidth = boardheight;
+    board.position.set(0, 0);
+
     const HEX_CROSS = 5; // hexes across middle row
     const w = 80; // width in user units
     const x_offset = 0.5 * (100 - w);
@@ -51,11 +59,15 @@ class GameUI {
     // initialize nodes
     for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
       const ns = new PIXI.Sprite();
-      ns.hitArea = new PIXI.Circle(0, 0, 50);
+      ns.hitArea = new PIXI.Circle(0, 0, boardwidth * 0.025);
       ns.interactive = true;
       ns.on("click", () => this.handleNodeClick(i));
       ns.anchor.set(0.5);
-      ns.position.set(8 * (x + x_offset), 8 * (y + y_offset));
+      ns.position.set(
+        0.01 * boardwidth * (x + x_offset),
+        0.01 * boardheight * (y + y_offset)
+      );
+      ns.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
       this.nodeSprites.push(ns);
       col++;
       if (col === rowSize[row]) {
@@ -96,6 +108,7 @@ class GameUI {
           (this.nodeSprites[i].x + this.nodeSprites[i + 1].x) / 2,
           (this.nodeSprites[i].y + this.nodeSprites[i + 1].y) / 2
         );
+        es.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
         this.edgeSpriteMap.set([i, i + 1], es);
       }
       // establish the conneciton between node and its downward node
@@ -116,6 +129,7 @@ class GameUI {
           (this.nodeSprites[e1].x + this.nodeSprites[e2].x) / 2,
           (this.nodeSprites[e1].y + this.nodeSprites[e2].y) / 2
         );
+        es.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
         this.edgeSpriteMap.set([e1, e2], es);
       }
       col++;
@@ -138,7 +152,7 @@ class GameUI {
       );
       ts.interactive = true;
       ts.on("click", () => this.handleTileClick(i));
-      ts.scale.set(0.9);
+      ts.scale.set((1.1 * boardwidth) / GameUI.DEFAULT_WIDTH);
       ts.anchor.set(0.5);
       ts.position.set(x, y);
       this.tileSprites.push(ts);
@@ -146,24 +160,25 @@ class GameUI {
       const toks = new PIXI.Sprite(
         this.textures[num == 7 ? `robber` : `no_${num}`]
       );
-      toks.scale.set(0.9);
+      toks.scale.set((0.9 * boardwidth) / GameUI.DEFAULT_WIDTH);
       toks.anchor.set(0.5);
-      toks.position.set(x, y - 30);
+      toks.position.set(x, y - 0.0375 * boardwidth);
       this.tokenSprites.push(toks);
     }
 
     const backdrop = new PIXI.Sprite(this.textures["backdrop"]);
-    backdrop.scale.set(0.25);
+    backdrop.scale.set((0.31 * boardwidth) / GameUI.DEFAULT_WIDTH);
     backdrop.anchor.set(0.5);
-    backdrop.position.set(400);
+    backdrop.position.set(0.5 * boardwidth);
 
-    this.app.stage.addChild(
+    board.addChild(
       backdrop,
       ...this.tileSprites,
       ...this.tokenSprites,
-      ...this.nodeSprites,
-      ...this.edgeSpriteMap.values()
+      ...this.edgeSpriteMap.values(),
+      ...this.nodeSprites
     );
+    this.app.stage.addChild(board);
 
     // initialize bank
     // TODO insert bank picture

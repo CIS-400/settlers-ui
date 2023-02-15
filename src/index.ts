@@ -4,9 +4,10 @@ import { Game } from "settlers";
 import GameUI from "./game-ui";
 
 async function init() {
-  const gameui = new GameUI(new Game());
+  const pixiContainer = document.getElementById("pixi-container")!;
+  const gameui = new GameUI(new Game(), pixiContainer);
   gameui.displayPlayerInfo();
-  document.body.appendChild(gameui.getUI());
+  pixiContainer.appendChild(gameui.getUI());
 }
 
 export default init();
