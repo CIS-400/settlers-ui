@@ -212,13 +212,11 @@ class GameUI {
 
     // intialize the player information 
     this.game.players.map((p, index) => {
-      const appWidth = this.app.view.width;
-      const appHeight = this.app.view.height;
-      const recWidth = 300;
-      const recHeight = 75;
+      const recWidth = width / 4;
+      const recHeight = height / 8;
 
-      const recX = appWidth-recWidth;
-      const recY = appHeight - recHeight*(index + 1)
+      const recX = width-recWidth;
+      const recY = height - recHeight*(index + 1)
 
       // draw rectangles containing player info
       const g = new PIXI.Graphics();
@@ -226,7 +224,8 @@ class GameUI {
       const turnColor = 0xfff4c8;
       
       g.beginFill(this.game.getTurn() === index ? turnColor : notTurnColor);
-      g.drawRect(recX, recY, recWidth, recHeight-1);
+      g.drawRect(recX, recY, recWidth-1, recHeight-1);
+      // g.scale.set(width / GameUI.DEFAULT_WIDTH)
       g.endFill();
       this.app.stage.addChild(g);
 
@@ -238,7 +237,7 @@ class GameUI {
         fontSize: 24,
         fill: 0x000000,
       });
-      victoryPs.position.set(appWidth-recWidth, appHeight-(recHeight*(index + 1))/2);
+      victoryPs.position.set(recX + recWidth/5, height-(recHeight*(index + 1))/2);
       this.app.stage.addChild(victoryPs);
 
       const numDevCards = new PIXI.Text(p.devCards.size(), {
