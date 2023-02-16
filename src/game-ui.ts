@@ -181,8 +181,11 @@ class GameUI {
     this.app.stage.addChild(board);
 
     // initialize bank
-    // TODO insert bank picture
-    // insert the cards
+    const bankPic = new PIXI.Sprite(this.textures['bank'])
+    bankPic.position.set(500, 400);
+    this.app.stage.addChild(bankPic);
+
+    // initialize the # of resource cards in bank
     for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
       const resource = i as SETTLERS.Resource;
       const resourceStr = SETTLERS.resStr(resource);
@@ -206,40 +209,36 @@ class GameUI {
       this.app.stage.addChild(numInBankSprite);
       this.app.stage.addChild(cardChild);
     }
-  }
 
-  render() {
-    // draw board
-    // draw overlay
-  }
-
-  renderBoard() {
-    // tiles
-    // nodes
-    // edges
-  }
-
-  handleNodeClick(node: number) {
-    console.log(`node ${node} clicked`);
-  }
-  handleTileClick(tile: number) {
-    console.log(`tile ${tile} clicked`);
-  }
-  handleEdgeClick([n0, n1]: [number, number]) {
-    console.log(`edge (${n0}, ${n1}) clicked`);
-  }
-
-  displayPlayerInfo() {
+    // intialize the player information 
     this.game.players.map((p, index) => {
-      // TODO: display player names
+      const appWidth = this.app.view.width;
+      const appHeight = this.app.view.height;
+      const recWidth = 300;
+      const recHeight = 75;
 
+      const recX = appWidth-recWidth;
+      const recY = appHeight - recHeight*(index + 1)
+
+      // draw rectangles containing player info
+      const g = new PIXI.Graphics();
+      const notTurnColor = 0xc9d7e9;
+      const turnColor = 0xfff4c8;
+      
+      g.beginFill(this.game.getTurn() === index ? turnColor : notTurnColor);
+      g.drawRect(recX, recY, recWidth, recHeight-1);
+      g.endFill();
+      this.app.stage.addChild(g);
+
+      // display player information inside rectangles
+      // TODO: display player names
+      
       const victoryPs = new PIXI.Text(p.victoryPoints, {
         fontFamily: "Arial",
         fontSize: 24,
-        fill: 0xdb04e9,
-        align: "right",
+        fill: 0x000000,
       });
-      victoryPs.x = 500;
+      victoryPs.position.set(appWidth-recWidth, appHeight-(recHeight*(index + 1))/2);
       this.app.stage.addChild(victoryPs);
 
       const numDevCards = new PIXI.Text(p.devCards.size(), {
@@ -278,6 +277,27 @@ class GameUI {
       );
       this.app.stage.addChild(numLongestRoad);
     });
+  }
+
+  render() {
+    // draw board
+    // draw overlay
+  }
+
+  renderBoard() {
+    // tiles
+    // nodes
+    // edges
+  }
+
+  handleNodeClick(node: number) {
+    console.log(`node ${node} clicked`);
+  }
+  handleTileClick(tile: number) {
+    console.log(`tile ${tile} clicked`);
+  }
+  handleEdgeClick([n0, n1]: [number, number]) {
+    console.log(`edge (${n0}, ${n1}) clicked`);
   }
 
   getUI() {
@@ -320,6 +340,10 @@ class GameUI {
       no_12: await PIXI.Assets.load(require("../assets/numbers/no_12.png")),
       settlement_0: await PIXI.Assets.load(
         require("../assets/settlements/settlement_0.png")
+      ),
+      // bank
+      bank: await PIXI.Assets.load(
+        require("../assets/bank.png")
       ),
 
       // cards

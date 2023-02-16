@@ -6,7 +6,6 @@ import GameUI from "./game-ui";
 async function init() {
   const pixiContainer = document.getElementById("pixi-container")!;
   const gameui = new GameUI(new Game(), pixiContainer);
-  gameui.displayPlayerInfo();
   pixiContainer.appendChild(gameui.getUI());
 }
 
