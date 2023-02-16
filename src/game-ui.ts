@@ -1,6 +1,7 @@
 import { Game } from "settlers";
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
+import Board from "./board";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -8,10 +9,7 @@ class GameUI {
   static BOARD_HEIGHT_RATIO = 0.85;
   readonly game: Game;
   readonly app: PIXI.Application<PIXI.ICanvas>;
-  private readonly nodeSprites: PIXI.Sprite[];
-  private readonly tileSprites: PIXI.Sprite[];
-  private readonly tokenSprites: PIXI.Sprite[];
-  private readonly edgeSpriteMap: Map<[number, number], PIXI.Sprite>;
+  board: Board;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -20,13 +18,10 @@ class GameUI {
       backgroundColor: "#78bac2",
       resizeTo: container,
     });
-    this.nodeSprites = [];
-    this.tileSprites = [];
-    this.tokenSprites = [];
-    this.edgeSpriteMap = new Map();
     this.handleNodeClick = this.handleNodeClick.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
     this.handleEdgeClick = this.handleEdgeClick.bind(this);
+    this.initialize = this.initialize.bind(this);
     this.loadTextures().then((textures) => {
       this.textures = textures;
       this.initialize();
@@ -35,153 +30,15 @@ class GameUI {
 
   initialize() {
     const { width, height } = this.app.view;
-    const board = new PIXI.Container();
-    const boardheight = GameUI.BOARD_HEIGHT_RATIO * height;
-    const boardwidth = boardheight;
-    board.position.set(0, 0);
 
-    const HEX_CROSS = 5; // hexes across middle row
-    const w = 80; // width in user units
-    const x_offset = 0.5 * (100 - w);
-    const h = 80; // height in user units
-    const y_offset = 0.5 * (100 - h);
-    const root3 = Math.sqrt(3);
-    const s = w / (HEX_CROSS * root3); // side length
-    let y = 0.5 * h - 3.5 * s; // starting y so that nodes are vertically aligned
-    let x = 0.5 * w - 1.5 * root3 * s; // starting x so that nodes are horizontally aligned
-    let rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
-    const halfRowSize = Math.floor(rowSize.length / 2);
-    let col = 0;
-    let row = 0;
-    let rx = x;
-    let ry = y;
+    // VERY IMPORTANT! used for scaling, uncomment scale factor to test
+    this.app.stage.scale.set(/* (0.5) * */ width / GameUI.DEFAULT_WIDTH);
 
-    // initialize nodes
-    for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      const ns = new PIXI.Sprite();
-      ns.hitArea = new PIXI.Circle(0, 0, boardwidth * 0.025);
-      ns.interactive = true;
-      ns.on("click", () => this.handleNodeClick(i));
-      ns.anchor.set(0.5);
-      ns.position.set(
-        0.01 * boardwidth * (x + x_offset),
-        0.01 * boardheight * (y + y_offset)
-      );
-      ns.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
-      this.nodeSprites.push(ns);
-      col++;
-      if (col === rowSize[row]) {
-        ry += row === halfRowSize - 1 ? s : 1.5 * s;
-        y = ry;
-        if (row < halfRowSize - 1) {
-          rx -= 0.5 * root3 * s;
-        } else if (row > halfRowSize - 1) {
-          rx += 0.5 * root3 * s;
-        }
-        x = rx;
-        col = 0;
-        row++;
-      } else {
-        x += 0.5 * root3 * s;
-        y += 0.5 * s * (col % 2 === (row < halfRowSize ? 1 : 0) ? -1 : 1);
-      }
-    }
-    // initialize edges
-    // Establish our connections.
-    rowSize = [7, 9, 11, 11, 9, 7]; // nodes per row
-    const downOffset = [8, 10, 11, 10, 8];
-    col = 0;
-    row = 0;
-    let es: PIXI.Sprite;
-    for (let i = 0; i < SETTLERS.NUM_NODES; i++) {
-      // establish the connection between node and its right node
-      if (col + 1 !== rowSize[row]) {
-        es = new PIXI.Sprite(this.textures[`road_0`]);
-        es.interactive = true;
-        es.on("click", () => this.handleEdgeClick([i, i + 1]));
-        es.anchor.set(0.5);
-        es.rotation = this.getAngle(
-          [this.nodeSprites[i].x, this.nodeSprites[i].y],
-          [this.nodeSprites[i + 1].x, this.nodeSprites[i + 1].y]
-        );
-        es.position.set(
-          (this.nodeSprites[i].x + this.nodeSprites[i + 1].x) / 2,
-          (this.nodeSprites[i].y + this.nodeSprites[i + 1].y) / 2
-        );
-        es.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
-        this.edgeSpriteMap.set([i, i + 1], es);
-      }
-      // establish the conneciton between node and its downward node
-      if (
-        (row < 3 && col % 2 === 0) ||
-        ((row === 3 || row === 4) && col % 2 === 1)
-      ) {
-        const [e1, e2] = [i, i + downOffset[row]];
-        es = new PIXI.Sprite(this.textures[`road_0`]);
-        es.interactive = true;
-        es.on("click", () => this.handleEdgeClick([e1, e2]));
-        es.anchor.set(0.5);
-        es.rotation = this.getAngle(
-          [this.nodeSprites[e1].x, this.nodeSprites[e1].y],
-          [this.nodeSprites[e2].x, this.nodeSprites[e2].y]
-        );
-        es.position.set(
-          (this.nodeSprites[e1].x + this.nodeSprites[e2].x) / 2,
-          (this.nodeSprites[e1].y + this.nodeSprites[e2].y) / 2
-        );
-        es.scale.set(boardwidth / GameUI.DEFAULT_WIDTH);
-        this.edgeSpriteMap.set([e1, e2], es);
-      }
-      col++;
-      if (col === rowSize[row]) {
-        col = 0;
-        row++;
-      }
-    }
-    // initialize tiles and tokesn
-    for (let i = 0; i < SETTLERS.NUM_TILES; i++) {
-      const tile = this.game.getTile(i);
-      const nodes = tile.nodes;
-      const num = tile.getNumber();
-      let x =
-        0.5 * (this.nodeSprites[nodes[0]].x + this.nodeSprites[nodes[5]].x);
-      let y =
-        0.5 * (this.nodeSprites[nodes[0]].y + this.nodeSprites[nodes[5]].y);
-      const ts = new PIXI.Sprite(
-        this.textures[`${SETTLERS.resStr(tile.resource)}_tile`]
-      );
-      ts.interactive = true;
-      ts.on("click", () => this.handleTileClick(i));
-      ts.scale.set((1.1 * boardwidth) / GameUI.DEFAULT_WIDTH);
-      ts.anchor.set(0.5);
-      ts.position.set(x, y);
-      this.tileSprites.push(ts);
-
-      const toks = new PIXI.Sprite(
-        this.textures[num == 7 ? `robber` : `no_${num}`]
-      );
-      toks.scale.set((0.9 * boardwidth) / GameUI.DEFAULT_WIDTH);
-      toks.anchor.set(0.5);
-      toks.position.set(x, y - 0.0375 * boardwidth);
-      this.tokenSprites.push(toks);
-    }
-
-    const backdrop = new PIXI.Sprite(this.textures["backdrop"]);
-    backdrop.scale.set((0.31 * boardwidth) / GameUI.DEFAULT_WIDTH);
-    backdrop.anchor.set(0.5);
-    backdrop.position.set(0.5 * boardwidth);
-
-    board.addChild(
-      backdrop,
-      ...this.tileSprites,
-      ...this.tokenSprites,
-      ...this.edgeSpriteMap.values(),
-      ...this.nodeSprites
-    );
-    this.app.stage.addChild(board);
+    this.board = new Board(this);
+    this.app.stage.addChild(this.board);
 
     // initialize bank
-    const bankPic = new PIXI.Sprite(this.textures['bank'])
+    const bankPic = new PIXI.Sprite(this.textures["bank"]);
     bankPic.position.set(500, 400);
     this.app.stage.addChild(bankPic);
 
@@ -210,35 +67,38 @@ class GameUI {
       this.app.stage.addChild(cardChild);
     }
 
-    // intialize the player information 
+    // intialize the player information
     this.game.players.map((p, index) => {
       const recWidth = width / 4;
       const recHeight = height / 8;
 
-      const recX = width-recWidth;
-      const recY = height - recHeight*(index + 1)
+      const recX = width - recWidth;
+      const recY = height - recHeight * (index + 1);
 
       // draw rectangles containing player info
       const g = new PIXI.Graphics();
       const notTurnColor = 0xc9d7e9;
       const turnColor = 0xfff4c8;
-      
+
       g.beginFill(this.game.getTurn() === index ? turnColor : notTurnColor);
-      g.drawRect(recX, recY, recWidth-1, recHeight-1);
+      g.drawRect(recX, recY, recWidth - 1, recHeight - 1);
       // g.scale.set(width / GameUI.DEFAULT_WIDTH)
       g.endFill();
       this.app.stage.addChild(g);
 
       // display player information inside rectangles
       // TODO: display player names
-      
+
       const victoryPs = new PIXI.Text(p.victoryPoints, {
         fontFamily: "Arial",
         fontSize: 24,
         fill: 0x000000,
       });
-      victoryPs.position.set(recX + recWidth/5, height-(recHeight*(index + 1))/2);
-      this.app.stage.addChild(victoryPs);
+      victoryPs.position.set(
+        recX + recWidth / 5,
+        height - (recHeight * (index + 1)) / 2
+      );
+      g.addChild(victoryPs);
 
       const numDevCards = new PIXI.Text(p.devCards.size(), {
         fontFamily: "Arial",
@@ -341,9 +201,7 @@ class GameUI {
         require("../assets/settlements/settlement_0.png")
       ),
       // bank
-      bank: await PIXI.Assets.load(
-        require("../assets/bank.png")
-      ),
+      bank: await PIXI.Assets.load(require("../assets/bank.png")),
 
       // cards
       brick_card: await PIXI.Assets.load(
@@ -363,15 +221,6 @@ class GameUI {
       ),
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
     };
-  }
-
-  private getAngle(
-    [x1, y1]: [number, number],
-    [x2, y2]: [number, number]
-  ): number {
-    const deltaX = x2 - x1;
-    const deltaY = y2 - y1;
-    return Math.atan2(deltaY, deltaX);
   }
 }
 
