@@ -2,6 +2,8 @@ import { Game } from "settlers";
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import Board from "./board";
+import Inventory from "./inventory";
+import Box from "./box";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -10,6 +12,7 @@ class GameUI {
   readonly game: Game;
   readonly app: PIXI.Application<PIXI.ICanvas>;
   board: Board;
+  inventory: Inventory;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -37,6 +40,51 @@ class GameUI {
     this.board = new Board(this);
     this.app.stage.addChild(this.board);
 
+    this.inventory = new Inventory(this);
+    this.app.stage.addChild(this.inventory);
+
+    const buyDevCard = new PIXI.Container();
+    buyDevCard.x = this.app.view.width * 0.7;
+    buyDevCard.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
+    buyDevCard.addChild(
+      new Box(
+        0,
+        0,
+        0.1 * width,
+        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
+      )
+    );
+    buyDevCard.addChild(new PIXI.Text("buy dev \ncard"));
+    this.app.stage.addChild(buyDevCard);
+
+    const trade = new PIXI.Container();
+    trade.x = this.app.view.width * 0.8;
+    trade.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
+    trade.addChild(
+      new Box(
+        0,
+        0,
+        0.1 * width,
+        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
+      )
+    );
+    trade.addChild(new PIXI.Text("trade"));
+    this.app.stage.addChild(trade);
+
+    const roll = new PIXI.Container();
+    roll.x = this.app.view.width * 0.9;
+    roll.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
+    roll.addChild(
+      new Box(
+        0,
+        0,
+        0.1 * width,
+        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
+      )
+    );
+    roll.addChild(new PIXI.Text("roll"));
+    this.app.stage.addChild(roll);
+    /*
     // initialize bank
     const bankPic = new PIXI.Sprite(this.textures["bank"]);
     bankPic.position.set(500, 400);
@@ -136,6 +184,7 @@ class GameUI {
       );
       this.app.stage.addChild(numLongestRoad);
     });
+    */
   }
 
   render() {
