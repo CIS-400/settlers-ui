@@ -34,8 +34,9 @@ class GameUI {
   initialize() {
     const { width, height } = this.app.view;
 
-    // VERY IMPORTANT! used for scaling, uncomment scale factor to test
-    this.app.stage.scale.set(/* (0.5) * */ width / GameUI.DEFAULT_WIDTH);
+    // VERY IMPORTANT! used for scaling, change scale scale factor to test
+    const SCALE_FACTOR = 1;
+    this.app.stage.scale.set((SCALE_FACTOR * width) / GameUI.DEFAULT_WIDTH);
 
     this.board = new Board(this);
     this.app.stage.addChild(this.board);
