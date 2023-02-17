@@ -4,6 +4,7 @@ import * as PIXI from "pixi.js";
 import Board from "./board";
 import Inventory from "./inventory";
 import Box from "./box";
+import Dice from "./dice";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -13,6 +14,7 @@ class GameUI {
   readonly app: PIXI.Application<PIXI.ICanvas>;
   board: Board;
   inventory: Inventory;
+  dice: Dice;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -45,7 +47,7 @@ class GameUI {
     this.app.stage.addChild(this.inventory);
 
     const buyDevCard = new PIXI.Container();
-    buyDevCard.x = this.app.view.width * 0.7;
+    buyDevCard.x = this.app.view.width * 0.5;
     buyDevCard.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
     buyDevCard.addChild(
       new Box(
@@ -59,7 +61,7 @@ class GameUI {
     this.app.stage.addChild(buyDevCard);
 
     const trade = new PIXI.Container();
-    trade.x = this.app.view.width * 0.8;
+    trade.x = this.app.view.width * 0.6;
     trade.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
     trade.addChild(
       new Box(
@@ -73,7 +75,7 @@ class GameUI {
     this.app.stage.addChild(trade);
 
     const roll = new PIXI.Container();
-    roll.x = this.app.view.width * 0.9;
+    roll.x = this.app.view.width * 0.7;
     roll.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
     roll.addChild(
       new Box(
@@ -85,6 +87,10 @@ class GameUI {
     );
     roll.addChild(new PIXI.Text("roll"));
     this.app.stage.addChild(roll);
+
+    this.dice = new Dice(this);
+    this.app.stage.addChild(this.dice);
+
     /*
     // initialize bank
     const bankPic = new PIXI.Sprite(this.textures["bank"]);
@@ -270,6 +276,13 @@ class GameUI {
         require("../assets/resource_cards/ore_card.svg")
       ),
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
+      // dice
+      dice_1: await PIXI.Assets.load(require("../assets/dice/1.png")),
+      dice_2: await PIXI.Assets.load(require("../assets/dice/2.png")),
+      dice_3: await PIXI.Assets.load(require("../assets/dice/3.png")),
+      dice_4: await PIXI.Assets.load(require("../assets/dice/4.png")),
+      dice_5: await PIXI.Assets.load(require("../assets/dice/5.png")),
+      dice_6: await PIXI.Assets.load(require("../assets/dice/6.png")),
     };
   }
 }
