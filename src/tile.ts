@@ -16,7 +16,7 @@ class Tile extends PIXI.Sprite {
     let y = 0.5 * (nodes[tile.nodes[0]].y + nodes[tile.nodes[5]].y);
     this.interactive = true;
     this.on("click", () => gameui.handleTileClick(id));
-    this.scale.set(0.7);
+    this.scale.set(0.75);
     this.anchor.set(0.5);
     this.position.set(x, y);
     this.token = new PIXI.Sprite(
