@@ -4,7 +4,11 @@ import * as PIXI from "pixi.js";
 import Board from "./board";
 import Inventory from "./inventory";
 import Box from "./box";
+<<<<<<< HEAD
 import Dice from "./dice";
+=======
+import Bank from "./bank";
+>>>>>>> 1870607 (added bank class)
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -12,10 +16,12 @@ class GameUI {
   static BOARD_HEIGHT_RATIO = 0.85;
   readonly game: Game;
   readonly app: PIXI.Application<PIXI.ICanvas>;
+  bank: Bank;
   board: Board;
   inventory: Inventory;
   dice: Dice;
   textures: Record<string, any>;
+
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
@@ -45,6 +51,9 @@ class GameUI {
 
     this.inventory = new Inventory(this);
     this.app.stage.addChild(this.inventory);
+
+    this.bank = new Bank(this);
+    this.app.stage.addChild(this.bank);
 
     const buyDevCard = new PIXI.Container();
     buyDevCard.x = this.app.view.width * 0.5;
