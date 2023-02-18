@@ -20,7 +20,8 @@ class Bank extends PIXI.Container {
     bankPic.height = height;
     bankPic.position.set(0, 0);
     this.addChild(bankPic);
-
+    let resourceCardHeight = 0;
+    let resourceCardWidth = 0;
     for (let i = 0; i < CARD_TYPES; i++) {
       const isResourceCard = i < SETTLERS.NUM_RESOURCE_TYPES;
 
@@ -30,7 +31,7 @@ class Bank extends PIXI.Container {
       if (resourceStr === "none" && isResourceCard) continue;
       const cardChild = new PIXI.Sprite(
         gameui.textures[
-          isResourceCard ? `${resourceStr.toLowerCase()}_card` : "brick_card"
+          isResourceCard ? `${resourceStr.toLowerCase()}_card` : "dev_card"
         ]
       );
 
@@ -45,7 +46,13 @@ class Bank extends PIXI.Container {
       // set positions of card and number
       const x = ((i + 1) * width) / (CARD_TYPES*1.5) + width / 6;
       cardChild.position.set(x, height / 9);
-
+      if (!isResourceCard) {
+        cardChild.width = resourceCardWidth;
+        cardChild.height = resourceCardHeight;
+      } else {
+        resourceCardHeight = cardChild.height;
+        resourceCardWidth = cardChild.width;
+      }
       numInBankSprite.anchor.set(0.5, 0);
       numInBankSprite.position.set(
         x + cardChild.width / 2,

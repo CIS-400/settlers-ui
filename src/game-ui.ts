@@ -4,11 +4,8 @@ import * as PIXI from "pixi.js";
 import Board from "./board";
 import Inventory from "./inventory";
 import Box from "./box";
-<<<<<<< HEAD
 import Dice from "./dice";
-=======
 import Bank from "./bank";
->>>>>>> 1870607 (added bank class)
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -284,6 +281,8 @@ class GameUI {
       ore_card: await PIXI.Assets.load(
         require("../assets/resource_cards/ore_card.svg")
       ),
+      dev_card: await PIXI.Assets.load(require("../assets/dev_card.png")),
+
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
       // dice
       dice_1: await PIXI.Assets.load(require("../assets/dice/1.png")),
