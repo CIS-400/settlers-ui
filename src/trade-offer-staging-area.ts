@@ -58,16 +58,10 @@ class TradeOfferStagingArea extends PIXI.Container {
         content: declineIcon,
       })
     );
-
-    const game = gameui.game;
-    let x: number,
-      card: PIXI.Sprite,
-      text: PIXI.Text,
-      arrow: PIXI.Sprite,
-      resource: SETTLERS.Resource;
+    let x: number, card: PIXI.Sprite, text: PIXI.Text;
     for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
       x = (i * width) / SETTLERS.NUM_RESOURCE_TYPES;
-      resource = i as SETTLERS.Resource;
+      let resource = i as SETTLERS.Resource;
       card = new PIXI.Sprite(
         gameui.textures[`${SETTLERS.resStr(resource)}_card`]
       );
@@ -78,6 +72,7 @@ class TradeOfferStagingArea extends PIXI.Container {
           card,
           type: "up",
           onclick: () => {
+            console.log(SETTLERS.resStr(resource));
             this.offer.set(resource, this.offer.get(resource) + 1);
             this.offerText[i].text = this.offer.get(resource);
           },
