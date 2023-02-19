@@ -233,7 +233,7 @@ class GameUI {
         require("../assets/settlements/settlement_0.png")
       ),
       // bank
-      bank: await PIXI.Assets.load(require("../assets/bank.png")),
+      bank_icon: await PIXI.Assets.load(require("../assets/icons/bank_icon.png")),
 
       // cards
       brick_card: await PIXI.Assets.load(
