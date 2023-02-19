@@ -7,6 +7,7 @@ import Box from "./box";
 import Dice from "./dice";
 import Bank from "./bank";
 import Button from "./button";
+import TradeOfferStagingArea from "./trade-offer-staging-area";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -18,6 +19,7 @@ class GameUI {
   board: Board;
   inventory: Inventory;
   dice: Dice;
+  tradeOfferStagingArea: TradeOfferStagingArea;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -52,6 +54,9 @@ class GameUI {
     this.bank = new Bank(this);
     this.app.stage.addChild(this.bank);
 
+    this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
+    this.app.stage.addChild(this.tradeOfferStagingArea);
+
     const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
     devCardButtonIcon.scale.set(0.5);
     const buyDevCard = new Button({
@@ -66,7 +71,7 @@ class GameUI {
     this.app.stage.addChild(buyDevCard);
 
     const trade = new Button({
-      x: this.app.view.width * 0.65,
+      x: this.app.view.width * 0.64,
       y:
         GameUI.BOARD_HEIGHT_RATIO * this.app.view.height +
         0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
@@ -215,7 +220,9 @@ class GameUI {
         require("../assets/settlements/settlement_0.png")
       ),
       // bank
-      bank_icon: await PIXI.Assets.load(require("../assets/icons/bank_icon.png")),
+      bank_icon: await PIXI.Assets.load(
+        require("../assets/icons/bank_icon.png")
+      ),
 
       // cards
       brick_card: await PIXI.Assets.load(
@@ -244,6 +251,12 @@ class GameUI {
       dice_5: await PIXI.Assets.load(require("../assets/dice/5.png")),
       dice_6: await PIXI.Assets.load(require("../assets/dice/6.png")),
       trade: await PIXI.Assets.load(require("../assets/icons/trade_icon.png")),
+      accept: await PIXI.Assets.load(
+        require("../assets/icons/accept_icon.png")
+      ),
+      decline: await PIXI.Assets.load(
+        require("../assets/icons/decline_icon.png")
+      ),
     };
   }
 }

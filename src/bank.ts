@@ -6,11 +6,11 @@ import Box from "./box";
 class Bank extends PIXI.Container {
   constructor(gameui: GameUI) {
     super();
-    this.y = GameUI.BOARD_HEIGHT_RATIO * (gameui.app.view.height * 0.5);
+    this.y = 0;
     this.x = 0.65 * gameui.app.view.width;
 
     const width = 0.35 * gameui.app.view.width;
-    const height = this.y / 4;
+    const height = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
     this.addChild(new Box(0, 0, width, height));
 
     // CARD_TYPES includes +1 for dev card
