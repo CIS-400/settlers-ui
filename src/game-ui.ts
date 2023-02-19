@@ -257,6 +257,12 @@ class GameUI {
       decline: await PIXI.Assets.load(
         require("../assets/icons/decline_icon.png")
       ),
+      arrow_up: await PIXI.Assets.load(
+        require("../assets/icons/arrow_up_icon.png")
+      ),
+      arrow_down: await PIXI.Assets.load(
+        require("../assets/icons/arrow_down_icon.png")
+      ),
     };
   }
 }
