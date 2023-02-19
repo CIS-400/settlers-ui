@@ -7,11 +7,13 @@ class Inventory extends PIXI.Container {
   private cardCountText: PIXI.Text[];
   constructor(gameui: GameUI) {
     super();
-    this.y = GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height;
+    this.y =
+      0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * gameui.app.view.height +
+      GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height;
     this.x = 0;
     this.cardCountText = [];
     const width = 0.5 * gameui.app.view.width;
-    const height = gameui.app.view.height - this.y;
+    const height = 0.9 * (gameui.app.view.height - this.y);
 
     this.addChild(new Box(0, 0, width, height));
 

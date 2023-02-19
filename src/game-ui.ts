@@ -6,6 +6,7 @@ import Inventory from "./inventory";
 import Box from "./box";
 import Dice from "./dice";
 import Bank from "./bank";
+import Button from "./button";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -18,7 +19,6 @@ class GameUI {
   inventory: Inventory;
   dice: Dice;
   textures: Record<string, any>;
-
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
@@ -52,47 +52,29 @@ class GameUI {
     this.bank = new Bank(this);
     this.app.stage.addChild(this.bank);
 
-    const buyDevCard = new PIXI.Container();
-    buyDevCard.x = this.app.view.width * 0.5;
-    buyDevCard.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
-    buyDevCard.addChild(
-      new Box(
-        0,
-        0,
-        0.1 * width,
-        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
-      )
-    );
-    buyDevCard.addChild(new PIXI.Text("buy dev \ncard"));
+    const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
+    devCardButtonIcon.scale.set(0.5);
+    const buyDevCard = new Button({
+      x: this.app.view.width * 0.525,
+      y:
+        GameUI.BOARD_HEIGHT_RATIO * this.app.view.height +
+        0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
+      width: 0.1 * width,
+      height: 0.9 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
+      content: devCardButtonIcon,
+    });
     this.app.stage.addChild(buyDevCard);
 
-    const trade = new PIXI.Container();
-    trade.x = this.app.view.width * 0.6;
-    trade.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
-    trade.addChild(
-      new Box(
-        0,
-        0,
-        0.1 * width,
-        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
-      )
-    );
-    trade.addChild(new PIXI.Text("trade"));
+    const trade = new Button({
+      x: this.app.view.width * 0.65,
+      y:
+        GameUI.BOARD_HEIGHT_RATIO * this.app.view.height +
+        0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
+      width: 0.1 * width,
+      height: 0.9 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
+      content: new PIXI.Sprite(this.textures["trade"]),
+    });
     this.app.stage.addChild(trade);
-
-    const roll = new PIXI.Container();
-    roll.x = this.app.view.width * 0.7;
-    roll.y = GameUI.BOARD_HEIGHT_RATIO * this.app.view.height;
-    roll.addChild(
-      new Box(
-        0,
-        0,
-        0.1 * width,
-        (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height
-      )
-    );
-    roll.addChild(new PIXI.Text("roll"));
-    this.app.stage.addChild(roll);
 
     this.dice = new Dice(this);
     this.app.stage.addChild(this.dice);
@@ -261,6 +243,7 @@ class GameUI {
       dice_4: await PIXI.Assets.load(require("../assets/dice/4.png")),
       dice_5: await PIXI.Assets.load(require("../assets/dice/5.png")),
       dice_6: await PIXI.Assets.load(require("../assets/dice/6.png")),
+      trade: await PIXI.Assets.load(require("../assets/icons/trade_icon.png")),
     };
   }
 }
