@@ -20,6 +20,7 @@ class Bank extends PIXI.Container {
     bankPic.height = height;
     bankPic.position.set(0, 0);
     this.addChild(bankPic);
+
     let resourceCardHeight = 0;
     let resourceCardWidth = 0;
     for (let i = 0; i < CARD_TYPES; i++) {
@@ -36,16 +37,16 @@ class Bank extends PIXI.Container {
       );
 
       // get number of cards in bank
-      const numInBank = isResourceCard ? gameui.game.bank.get(resource) : gameui.game.deck.size();
+      const numInBank = isResourceCard
+        ? gameui.game.bank.get(resource)
+        : gameui.game.deck.size();
       const numInBankSprite = new PIXI.Text(numInBank, {
         fontFamily: "Arial",
         fontSize: 14,
         fill: 0x000000,
       });
 
-      // set positions of card and number
-      const x = ((i + 1) * width) / (CARD_TYPES*1.5) + width / 6;
-      cardChild.position.set(x, height / 9);
+      // properly set dev card dimensions since dev card is larger than other resource cards
       if (!isResourceCard) {
         cardChild.width = resourceCardWidth;
         cardChild.height = resourceCardHeight;
@@ -53,6 +54,11 @@ class Bank extends PIXI.Container {
         resourceCardHeight = cardChild.height;
         resourceCardWidth = cardChild.width;
       }
+
+      // set positions of card and number
+      const x = ((i + 1) * width) / (CARD_TYPES * 1.5) + width / 6;
+      cardChild.position.set(x, height / 9);
+
       numInBankSprite.anchor.set(0.5, 0);
       numInBankSprite.position.set(
         x + cardChild.width / 2,

@@ -98,36 +98,6 @@ class GameUI {
     this.app.stage.addChild(this.dice);
 
     /*
-    // initialize bank
-    const bankPic = new PIXI.Sprite(this.textures["bank"]);
-    bankPic.position.set(500, 400);
-    this.app.stage.addChild(bankPic);
-
-    // initialize the # of resource cards in bank
-    for (let i = 0; i < SETTLERS.NUM_RESOURCE_TYPES; i++) {
-      const resource = i as SETTLERS.Resource;
-      const resourceStr = SETTLERS.resStr(resource);
-      if (resourceStr === "none") continue;
-
-      const cardChild = new PIXI.Sprite(
-        this.textures[`${resourceStr.toLowerCase()}_card`]
-      );
-      const numInBank = this.game.bank.get(resource);
-
-      cardChild.anchor.set(0.5);
-      cardChild.position.set((i + 1) * 50 + 500, 500);
-
-      const numInBankSprite = new PIXI.Text(numInBank, {
-        fontFamily: "Arial",
-        fontSize: 24,
-        fill: 0xdb04e9,
-        align: "right",
-      });
-      numInBankSprite.position.set((i + 1) * 50 + 480, 520);
-      this.app.stage.addChild(numInBankSprite);
-      this.app.stage.addChild(cardChild);
-    }
-
     // intialize the player information
     this.game.players.map((p, index) => {
       const recWidth = width / 4;
