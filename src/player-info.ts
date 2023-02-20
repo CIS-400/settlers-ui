@@ -7,8 +7,8 @@ class PlayerInfo extends PIXI.Container {
   constructor(gameui: GameUI) {
     super();
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
-    this.x = 0.65 * gameui.app.view.width;
-    const width = 0.35 * gameui.app.view.width;
+    this.x = 0.7 * gameui.app.view.width;
+    const width = 0.3 * gameui.app.view.width;
     const height = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 10;
 
     gameui.game.players.map((p, index) => {
@@ -72,7 +72,7 @@ class PlayerInfo extends PIXI.Container {
       this.addChild(numDevCards);
 
       // display largest army AND the number of knights each player has played
-      const largeArmy = new PIXI.Sprite(gameui.textures["large_army"]);
+      const largeArmy = new PIXI.Sprite(gameui.textures[`large_army${gameui.game.largestArmy.owner === index ? '_gold' : ''}`]);
       largeArmy.height = height * 0.65;
       largeArmy.width = largeArmy.height;
       x = (width / 8) * 4.8;
@@ -89,7 +89,7 @@ class PlayerInfo extends PIXI.Container {
       this.addChild(knightsPlayed);
 
       // display longest road AND the length of the longest road
-      const longRoad = new PIXI.Sprite(gameui.textures["long_road"]);
+      const longRoad = new PIXI.Sprite(gameui.textures[`long_road${gameui.game.longestRoad.owner === index ? '_gold' : ''}`]);
       longRoad.height = height * 0.65;
       longRoad.width = longRoad.height;
       x = (width / 8) * 6.1;

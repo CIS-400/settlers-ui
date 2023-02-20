@@ -188,8 +188,14 @@ class GameUI {
       large_army: await PIXI.Assets.load(
         require("../assets/largest_army.png")
       ),
+      large_army_gold: await PIXI.Assets.load(
+        require("../assets/largest_army_gold.png")
+      ),
       long_road: await PIXI.Assets.load(
         require("../assets/longest_road.png")
+      ),
+      long_road_gold: await PIXI.Assets.load(
+        require("../assets/longest_road_gold.png")
       ),
 
       // cards
