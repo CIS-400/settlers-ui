@@ -18,7 +18,6 @@ class Bank extends PIXI.Container {
     const bankPic = new PIXI.Sprite(gameui.textures["bank_icon"]);
     bankPic.width = height * 0.7;
     bankPic.height = height * 0.7;
-    // bankPic.anchor.set(0, 0);
     bankPic.position.set(width / 15, height / 10);
     this.addChild(bankPic);
 

@@ -7,6 +7,7 @@ import Box from "./box";
 import Dice from "./dice";
 import Bank from "./bank";
 import Button from "./button";
+import PlayerInfo from "./player-info";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
 
 class GameUI {
@@ -19,6 +20,7 @@ class GameUI {
   board: Board;
   inventory: Inventory;
   dice: Dice;
+  playerInfo: PlayerInfo;
   tradeOfferStagingArea: TradeOfferStagingArea;
   textures: Record<string, any>;
 
@@ -54,6 +56,9 @@ class GameUI {
     this.bank = new Bank(this);
     this.app.stage.addChild(this.bank);
 
+    this.playerInfo = new PlayerInfo(this);
+    this.app.stage.addChild(this.playerInfo);
+
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
     this.tradeOfferStagingArea.visible = false;
     this.app.stage.addChild(this.tradeOfferStagingArea);
@@ -87,78 +92,6 @@ class GameUI {
 
     this.dice = new Dice(this);
     this.app.stage.addChild(this.dice);
-
-    /*
-    // intialize the player information
-    this.game.players.map((p, index) => {
-      const recWidth = width / 4;
-      const recHeight = height / 8;
-
-      const recX = width - recWidth;
-      const recY = height - recHeight * (index + 1);
-
-      // draw rectangles containing player info
-      const g = new PIXI.Graphics();
-      const notTurnColor = 0xc9d7e9;
-      const turnColor = 0xfff4c8;
-
-      g.beginFill(this.game.getTurn() === index ? turnColor : notTurnColor);
-      g.drawRect(recX, recY, recWidth - 1, recHeight - 1);
-      // g.scale.set(width / GameUI.DEFAULT_WIDTH)
-      g.endFill();
-      this.app.stage.addChild(g);
-
-      // display player information inside rectangles
-      // TODO: display player names
-
-      const victoryPs = new PIXI.Text(p.victoryPoints, {
-        fontFamily: "Arial",
-        fontSize: 24,
-        fill: 0x000000,
-      });
-      victoryPs.position.set(
-        recX + recWidth / 5,
-        height - (recHeight * (index + 1)) / 2
-      );
-      g.addChild(victoryPs);
-
-      const numDevCards = new PIXI.Text(p.devCards.size(), {
-        fontFamily: "Arial",
-        fontSize: 24,
-        fill: 0xdb04e9,
-        align: "right",
-      });
-      this.app.stage.addChild(numDevCards);
-
-      const numCardsHand = new PIXI.Text(p.resources.size(), {
-        fontFamily: "Arial",
-        fontSize: 24,
-        fill: 0xdb04e9,
-        align: "right",
-      });
-      this.app.stage.addChild(numCardsHand);
-
-      const knightsPlayed = new PIXI.Text(p.knightsPlayed, {
-        fontFamily: "Arial",
-        fontSize: 50,
-        fill: 0xff1010,
-        align: "left",
-      });
-      knightsPlayed.x = 10;
-      this.app.stage.addChild(knightsPlayed);
-
-      const numLongestRoad = new PIXI.Text(
-        this.game.board.getLongestRoad(index),
-        {
-          fontFamily: "Arial",
-          fontSize: 50,
-          fill: 0xff1010,
-          align: "left",
-        }
-      );
-      this.app.stage.addChild(numLongestRoad);
-    });
-    */
   }
 
   render() {
@@ -235,6 +168,29 @@ class GameUI {
       // bank
       bank_icon: await PIXI.Assets.load(
         require("../assets/icons/bank_icon.png")
+      ),
+
+      // player info stuff
+      player_icon0: await PIXI.Assets.load(
+        require("../assets/icons/player_0_icon.png")
+      ),
+      player_icon1: await PIXI.Assets.load(
+        require("../assets/icons/player_1_icon.png")
+      ),
+      player_icon2: await PIXI.Assets.load(
+        require("../assets/icons/player_2_icon.png")
+      ),
+      player_icon3: await PIXI.Assets.load(
+        require("../assets/icons/player_3_icon.png")
+      ),
+      back_card: await PIXI.Assets.load(
+        require("../assets/resource_cards/back_card.png")
+      ),
+      large_army: await PIXI.Assets.load(
+        require("../assets/largest_army.png")
+      ),
+      long_road: await PIXI.Assets.load(
+        require("../assets/longest_road.png")
       ),
 
       // cards
