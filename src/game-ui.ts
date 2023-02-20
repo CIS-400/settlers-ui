@@ -55,6 +55,7 @@ class GameUI {
     this.app.stage.addChild(this.bank);
 
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
+    this.tradeOfferStagingArea.visible = false;
     this.app.stage.addChild(this.tradeOfferStagingArea);
 
     const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
@@ -78,6 +79,9 @@ class GameUI {
       width: 0.1 * width,
       height: 0.9 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
       content: new PIXI.Sprite(this.textures["trade"]),
+      onclick: () => {
+        this.tradeOfferStagingArea.visible = true;
+      },
     });
     this.app.stage.addChild(trade);
 

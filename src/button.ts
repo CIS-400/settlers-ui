@@ -9,12 +9,14 @@ class Button extends PIXI.Graphics {
     width,
     height,
     content,
+    onclick,
   }: {
     x: number;
     y: number;
     width: number;
     height: number;
     content: PIXI.Sprite;
+    onclick?: () => void;
   }) {
     super();
     this.position.set(x, y);
@@ -36,6 +38,7 @@ class Button extends PIXI.Graphics {
       this.position.set(x, y);
       this.alpha = 0.85;
     });
+    if (onclick) this.on("click", onclick);
     content.anchor.set(0.5);
     content.position.set(width / 2, height / 2);
     this.addChild(content);

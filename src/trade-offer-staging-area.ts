@@ -34,6 +34,9 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: tradeWithBankIcon,
+        onclick: () => {
+          this.visible = false;
+        },
       })
     );
     const acceptIcon = new PIXI.Sprite(gameui.textures["accept"]);
@@ -45,6 +48,9 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: acceptIcon,
+        onclick: () => {
+          this.visible = false;
+        },
       })
     );
     const declineIcon = new PIXI.Sprite(gameui.textures["decline"]);
@@ -56,6 +62,9 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: declineIcon,
+        onclick: () => {
+          this.visible = false;
+        },
       })
     );
     let x: number, card: PIXI.Sprite, text: PIXI.Text;
