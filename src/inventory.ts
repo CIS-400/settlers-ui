@@ -48,6 +48,7 @@ class Inventory extends PIXI.Container {
         );
       }
       card!.position.set(x, height / 5);
+      card!.scale.set(0.3);
       text.anchor.set(0.5, 0);
       text!.position.set(x + card!.width / 2, height / 5 + card!.height);
       this.cardCountText.push(text!);

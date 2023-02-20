@@ -48,17 +48,19 @@ class Node extends PIXI.Container implements Updatable {
       return;
 
     if (n.isEmpty()) {
-      game.handleAction({
-        type: SETTLERS.ActionType.BuildSettlement,
-        player: game.getTurn(),
-        payload: { node: this.id },
-      });
+      game.handleAction(
+        new SETTLERS.Action(
+          SETTLERS.ActionType.BuildSettlement,
+          game.getTurn(),
+          { node: this.id }
+        )
+      );
     } else {
-      game.handleAction({
-        type: SETTLERS.ActionType.BuildCity,
-        player: game.getTurn(),
-        payload: { node: this.id },
-      });
+      game.handleAction(
+        new SETTLERS.Action(SETTLERS.ActionType.BuildCity, game.getTurn(), {
+          node: this.id,
+        })
+      );
     }
     this.update();
   }

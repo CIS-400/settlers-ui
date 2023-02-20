@@ -75,6 +75,7 @@ class TradeOfferStagingArea extends PIXI.Container {
         gameui.textures[`${SETTLERS.resStr(resource)}_card`]
       );
       card.position.set(x, 0.05 * STAGE_AREA_HEIGHT);
+      card.scale.set(0.3);
       this.addChild(card);
       this.addChild(
         this.makeArrow(gameui, {
@@ -101,6 +102,7 @@ class TradeOfferStagingArea extends PIXI.Container {
         gameui.textures[`${SETTLERS.resStr(i as SETTLERS.Resource)}_card`]
       );
       card.position.set(x, 0.5 * STAGE_AREA_HEIGHT);
+      card.scale.set(0.3);
       this.addChild(card);
       this.addChild(
         this.makeArrow(gameui, {

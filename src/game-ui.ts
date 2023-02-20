@@ -64,7 +64,6 @@ class GameUI {
     this.app.stage.addChild(this.tradeOfferStagingArea);
 
     const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
-    devCardButtonIcon.scale.set(0.5);
     const buyDevCard = new Button({
       x: this.app.view.width * 0.525,
       y:
@@ -195,19 +194,19 @@ class GameUI {
 
       // cards
       brick_card: await PIXI.Assets.load(
-        require("../assets/resource_cards/brick_card.svg")
+        require("../assets/resource_cards/brick_card.png")
       ),
       lumber_card: await PIXI.Assets.load(
-        require("../assets/resource_cards/wood_card.svg")
+        require("../assets/resource_cards/wood_card.png")
       ),
       wool_card: await PIXI.Assets.load(
-        require("../assets/resource_cards/wool_card.svg")
+        require("../assets/resource_cards/wool_card.png")
       ),
       grain_card: await PIXI.Assets.load(
-        require("../assets/resource_cards/wheat_card.svg")
+        require("../assets/resource_cards/wheat_card.png")
       ),
       ore_card: await PIXI.Assets.load(
-        require("../assets/resource_cards/ore_card.svg")
+        require("../assets/resource_cards/ore_card.png")
       ),
       dev_card: await PIXI.Assets.load(
         require("../assets/dev_cards/dev_card.png")
