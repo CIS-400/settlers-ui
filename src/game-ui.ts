@@ -223,6 +223,15 @@ class GameUI {
       settlement_0: await PIXI.Assets.load(
         require("../assets/settlements/settlement_0.png")
       ),
+      settlement_1: await PIXI.Assets.load(
+        require("../assets/settlements/settlement_1.png")
+      ),
+      settlement_2: await PIXI.Assets.load(
+        require("../assets/settlements/settlement_2.png")
+      ),
+      settlement_3: await PIXI.Assets.load(
+        require("../assets/settlements/settlement_3.png")
+      ),
       // bank
       bank_icon: await PIXI.Assets.load(
         require("../assets/icons/bank_icon.png")
@@ -244,7 +253,9 @@ class GameUI {
       ore_card: await PIXI.Assets.load(
         require("../assets/resource_cards/ore_card.svg")
       ),
-      dev_card: await PIXI.Assets.load(require("../assets/dev_card.png")),
+      dev_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/dev_card.png")
+      ),
 
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
       // dice

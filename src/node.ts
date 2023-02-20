@@ -78,7 +78,7 @@ class Node extends PIXI.Container implements Updatable {
   private _onmouseleave() {
     const { game } = this.gameui;
     const n: SETTLERS.Node = game.getNode(this.id);
-    const p = game.getTurn();
+    const p = n.getPlayer();
     if (n.hasCity()) {
       this.sprite.texture = this.gameui.textures[`settlement_${p}`]; // TODO: change to city
     } else if (!n.isEmpty()) {
