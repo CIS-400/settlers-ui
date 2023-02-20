@@ -165,7 +165,6 @@ class TradeOfferStagingArea extends PIXI.Container {
     arrow.on("mouseleave", function () {
       this.alpha = 0.5;
     });
-    arrow.scale.set(0.1);
     arrow.position.set(
       card.x + card.width,
       card.y + (type === "up" ? 0.25 * card.height : 0.75 * card.height)
