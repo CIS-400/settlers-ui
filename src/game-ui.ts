@@ -256,6 +256,21 @@ class GameUI {
       dev_card: await PIXI.Assets.load(
         require("../assets/dev_cards/dev_card.png")
       ),
+      knight_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/knight.png")
+      ),
+      monopoly_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/monopoly.png")
+      ),
+      roadbuilder_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/road_builder.png")
+      ),
+      victorypoint_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/victory_point.png")
+      ),
+      yearofplenty_card: await PIXI.Assets.load(
+        require("../assets/dev_cards/year_of_plenty.png")
+      ),
 
       backdrop: await PIXI.Assets.load(require("../assets/backdrop.png")),
       // dice

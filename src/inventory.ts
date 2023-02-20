@@ -32,7 +32,15 @@ class Inventory extends PIXI.Container {
           game.players[game.getTurn()].resources.get(i as SETTLERS.Resource)
         );
       } else {
-        card = new PIXI.Sprite(gameui.textures[`grain_card`]);
+        card = new PIXI.Sprite(
+          gameui.textures[
+            `${SETTLERS.devCardStr(
+              (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
+            )
+              .toLowerCase()
+              .replace(/\s/g, "")}_card`
+          ]
+        );
         text = new PIXI.Text(
           game.players[game.getTurn()].devCards.get(
             (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
