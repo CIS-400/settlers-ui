@@ -219,7 +219,7 @@ class GameUI {
         require("../assets/dev_cards/monopoly.png")
       ),
       roadbuilder_card: await PIXI.Assets.load(
-        require("../assets/dev_cards/road_builder.png")
+        require("../assets/dev_cards/road_building.png")
       ),
       victorypoint_card: await PIXI.Assets.load(
         require("../assets/dev_cards/victory_point.png")
