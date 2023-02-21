@@ -46,17 +46,9 @@ class Bank extends PIXI.Container {
         fill: 0x000000,
       });
 
-      // properly set dev card dimensions since dev card is larger than other resource cards
-      if (!isResourceCard) {
-        cardChild.width = resourceCardWidth;
-        cardChild.height = resourceCardHeight;
-      } else {
-        resourceCardHeight = cardChild.height;
-        resourceCardWidth = cardChild.width;
-      }
-
       // set positions of card and number
       const x = ((i + 1) * width) / (CARD_TYPES * 1.5) + width / 6;
+      cardChild.scale.set(0.3)
       cardChild.position.set(x, height / 9);
 
       numInBankSprite.anchor.set(0.5, 0);
