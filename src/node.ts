@@ -45,7 +45,7 @@ class Node extends PIXI.Container implements Updatable {
     const action = this.getPotentialAction();
     if (!game.isValidAction(action)) return;
     game.handleAction(action);
-    this.update();
+    this.gameui.update();
   }
 
   private _onmouseenter() {

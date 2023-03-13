@@ -9,6 +9,7 @@ import Bank from "./bank";
 import Button from "./button";
 import PlayerInfo from "./player-info";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
+import EndTurn from "./end-turn";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -20,6 +21,7 @@ class GameUI {
   board: Board;
   inventory: Inventory;
   dice: Dice;
+  endTurn: EndTurn;
   playerInfo: PlayerInfo;
   tradeOfferStagingArea: TradeOfferStagingArea;
   textures: Record<string, any>;
@@ -30,9 +32,6 @@ class GameUI {
       backgroundColor: "#78bac2",
       resizeTo: container,
     });
-    this.handleNodeClick = this.handleNodeClick.bind(this);
-    this.handleTileClick = this.handleTileClick.bind(this);
-    this.handleEdgeClick = this.handleEdgeClick.bind(this);
     this.initialize = this.initialize.bind(this);
     this.loadTextures().then((textures) => {
       this.textures = textures;
@@ -89,29 +88,21 @@ class GameUI {
       },
     });
     this.app.stage.addChild(trade);
+
     this.dice = new Dice(this);
     this.app.stage.addChild(this.dice);
+
+    this.endTurn = new EndTurn(this);
+    this.app.stage.addChild(this.endTurn);
   }
 
-  render() {
-    // draw board
-    // draw overlay
-  }
-
-  renderBoard() {
-    // tiles
-    // nodes
-    // edges
-  }
-
-  handleNodeClick(node: number) {
-    console.log(`node ${node} clicked`);
-  }
-  handleTileClick(tile: number) {
-    console.log(`tile ${tile} clicked`);
-  }
-  handleEdgeClick([n0, n1]: [number, number]) {
-    console.log(`edge (${n0}, ${n1}) clicked`);
+  update() {
+    this.board.update();
+    this.dice.update();
+    this.endTurn.update();
+    //this.playerInfo.update();
+    //this.bank.update();
+    //this.inventory.update();
   }
 
   getUI() {
@@ -247,6 +238,9 @@ class GameUI {
       ),
       arrow_down: await PIXI.Assets.load(
         require("../assets/icons/arrow_down_icon.png")
+      ),
+      end_turn: await PIXI.Assets.load(
+        require("../assets/icons/end_turn_icon.png")
       ),
     };
   }

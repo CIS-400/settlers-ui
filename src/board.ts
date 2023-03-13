@@ -4,14 +4,17 @@ import Edge from "./edge";
 import GameUI from "./game-ui";
 import Node from "./node";
 import Tile from "./tile";
+import Updatable from "./updatable";
 
-class Board extends PIXI.Container {
+class Board extends PIXI.Container implements Updatable {
+  gameui: GameUI;
   nodes: Node[];
   edges: Edge[];
   tiles: Tile[];
 
   constructor(gameui: GameUI) {
     super();
+    this.gameui = gameui;
     this.nodes = [];
     this.edges = [];
     this.tiles = [];
@@ -101,6 +104,11 @@ class Board extends PIXI.Container {
     backdrop.position.set(0.5 * width);
 
     this.addChild(backdrop, ...this.tiles, ...this.edges, ...this.nodes);
+  }
+
+  update() {
+    this.edges.forEach((e) => e.update());
+    this.nodes.forEach((e) => e.update());
   }
 }
 

@@ -47,7 +47,7 @@ class Edge extends PIXI.Container implements Updatable {
     if (!game.isValidAction(action).valid) return;
     game.handleAction(action);
     this.sprite.alpha = 1;
-    this.update();
+    this.gameui.update();
   }
 
   private _onmouseenter() {
