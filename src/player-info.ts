@@ -35,7 +35,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
 
       // TODO: display player names
       const pfp = new PIXI.Sprite(gameui.textures[`player_icon${index}`]);
-      pfp.alpha = (gameui.game.getTurn() == index) ? 1 : 0.3;
+      pfp.alpha = (gameui.game.getTurn() === index) ? 1 : 0.3;
       pfp.width = height * 0.4;
       pfp.height = height * 0.4;
       let x = width / 8;
@@ -151,7 +151,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.devCardsText[i].text = player.devCards.size();
       this.knightsText[i].text = player.knightsPlayed;
       this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i);
-      this.pfps[i].alpha = (this.gameui.game.getTurn() == i) ? 1 : 0.3;
+      this.pfps[i].alpha = (this.gameui.game.getTurn() === i) ? 1 : 0.3;
     });
   }
 }
