@@ -2,11 +2,15 @@ import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import GameUI from "./game-ui";
 import Box from "./box";
+import Updatable from "./updatable";
 
-class Inventory extends PIXI.Container {
+class Inventory extends PIXI.Container implements Updatable {
   private cardCountText: PIXI.Text[];
+  gameui: GameUI;
   constructor(gameui: GameUI) {
     super();
+    this.gameui = gameui;
+
     this.y =
       0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * gameui.app.view.height +
       GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height;
@@ -53,6 +57,22 @@ class Inventory extends PIXI.Container {
       text!.position.set(x + card!.width / 2, height / 5 + card!.height);
       this.cardCountText.push(text!);
       this.addChild(card!, text!);
+    }
+  }
+
+  update() {
+    const CARD_TYPES =
+      SETTLERS.NUM_RESOURCE_TYPES + SETTLERS.NUM_DEV_CARD_TYPES;
+    for (let i = 0; i < CARD_TYPES; i++) {
+      if (i < SETTLERS.NUM_RESOURCE_TYPES) {
+        this.cardCountText[i].text = this.gameui.game.players[
+          this.gameui.game.getTurn()
+        ].resources.get(i as SETTLERS.Resource);
+      } else {
+        this.cardCountText[i].text = this.gameui.game.players[
+          this.gameui.game.getTurn()
+        ].devCards.get((i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard);
+      }
     }
   }
 }
