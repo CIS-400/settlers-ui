@@ -3,7 +3,6 @@ import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import Board from "./board";
 import Inventory from "./inventory";
-import Box from "./box";
 import Dice from "./dice";
 import Bank from "./bank";
 import Button from "./button";
