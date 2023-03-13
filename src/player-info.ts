@@ -2,10 +2,25 @@ import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import GameUI from "./game-ui";
 import Box from "./box";
+import Updatable from "./updatable";
 
-class PlayerInfo extends PIXI.Container {
+class PlayerInfo extends PIXI.Container implements Updatable {
+  private victoryPText: PIXI.Text[];
+  private numCardsText: PIXI.Text[];
+  private devCardsText: PIXI.Text[];
+  private knightsText: PIXI.Text[];
+  private roadsText: PIXI.Text[];
+  gameui: GameUI;
+
   constructor(gameui: GameUI) {
     super();
+    this.gameui = gameui;
+    this.victoryPText = [];
+    this.numCardsText = [];
+    this.devCardsText = [];
+    this.knightsText = [];
+    this.roadsText = [];
+
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
     this.x = 0.7 * gameui.app.view.width;
     const width = 0.3 * gameui.app.view.width;
@@ -31,6 +46,7 @@ class PlayerInfo extends PIXI.Container {
       victoryPs.anchor.set(0.5, 0);
       victoryPs.position.set(x + pfp.width / 2, y + pfp.height);
       this.addChild(victoryPs);
+      this.victoryPText.push(victoryPs);
 
       // display back of resource card AND number of cards in hand
       const resourceCard = new PIXI.Sprite(gameui.textures["back_card"]);
@@ -52,6 +68,7 @@ class PlayerInfo extends PIXI.Container {
         y + resourceCard.height
       );
       this.addChild(numCardsHand);
+      this.numCardsText.push(numCardsHand);
 
       // display back of dev card AND number of dev cards in hand
       const devCard = new PIXI.Sprite(gameui.textures["dev_card"]);
@@ -70,9 +87,14 @@ class PlayerInfo extends PIXI.Container {
       numDevCards.anchor.set(0.5, 0);
       numDevCards.position.set(x + devCard.width / 2, y + devCard.height);
       this.addChild(numDevCards);
+      this.devCardsText.push(numDevCards);
 
       // display largest army AND the number of knights each player has played
-      const largeArmy = new PIXI.Sprite(gameui.textures[`large_army${gameui.game.largestArmy.owner === index ? '_gold' : ''}`]);
+      const largeArmy = new PIXI.Sprite(
+        gameui.textures[
+          `large_army${gameui.game.largestArmy.owner === index ? "_gold" : ""}`
+        ]
+      );
       largeArmy.height = height * 0.65;
       largeArmy.width = largeArmy.height;
       x = (width / 8) * 4.8;
@@ -87,9 +109,14 @@ class PlayerInfo extends PIXI.Container {
       knightsPlayed.anchor.set(0.5, 0);
       knightsPlayed.position.set(x + largeArmy.width / 2, y + largeArmy.height);
       this.addChild(knightsPlayed);
+      this.knightsText.push(knightsPlayed);
 
       // display longest road AND the length of the longest road
-      const longRoad = new PIXI.Sprite(gameui.textures[`long_road${gameui.game.longestRoad.owner === index ? '_gold' : ''}`]);
+      const longRoad = new PIXI.Sprite(
+        gameui.textures[
+          `long_road${gameui.game.longestRoad.owner === index ? "_gold" : ""}`
+        ]
+      );
       longRoad.height = height * 0.65;
       longRoad.width = longRoad.height;
       x = (width / 8) * 6.1;
@@ -107,6 +134,17 @@ class PlayerInfo extends PIXI.Container {
       numLongestRoad.anchor.set(0.5, 0);
       numLongestRoad.position.set(x + longRoad.width / 2, y + longRoad.height);
       this.addChild(numLongestRoad);
+      this.roadsText.push(numLongestRoad);
+    });
+  }
+  
+  update() {
+    this.gameui.game.players.map((player, i) => {
+      this.victoryPText[i].text = player.victoryPoints;
+      this.numCardsText[i].text = player.resources.size();
+      this.devCardsText[i].text = player.devCards.size();
+      this.knightsText[i].text = player.knightsPlayed;
+      this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i)
     });
   }
 }
