@@ -64,6 +64,7 @@ class GameUI {
     this.app.stage.addChild(this.tradeOfferStagingArea);
 
     const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
+    devCardButtonIcon.scale.set(0.5);
     const buyDevCard = new Button({
       x: this.app.view.width * 0.525,
       y:
@@ -88,7 +89,6 @@ class GameUI {
       },
     });
     this.app.stage.addChild(trade);
-
     this.dice = new Dice(this);
     this.app.stage.addChild(this.dice);
   }
@@ -164,6 +164,10 @@ class GameUI {
       settlement_3: await PIXI.Assets.load(
         require("../assets/settlements/settlement_3.png")
       ),
+      city_0: await PIXI.Assets.load(require("../assets/cities/city_0.png")),
+      city_1: await PIXI.Assets.load(require("../assets/cities/city_1.png")),
+      city_2: await PIXI.Assets.load(require("../assets/cities/city_2.png")),
+      city_3: await PIXI.Assets.load(require("../assets/cities/city_3.png")),
       // bank
       bank_icon: await PIXI.Assets.load(
         require("../assets/icons/bank_icon.png")
@@ -185,18 +189,8 @@ class GameUI {
       back_card: await PIXI.Assets.load(
         require("../assets/resource_cards/back_card.png")
       ),
-      large_army: await PIXI.Assets.load(
-        require("../assets/largest_army.png")
-      ),
-      large_army_gold: await PIXI.Assets.load(
-        require("../assets/largest_army_gold.png")
-      ),
-      long_road: await PIXI.Assets.load(
-        require("../assets/longest_road.png")
-      ),
-      long_road_gold: await PIXI.Assets.load(
-        require("../assets/longest_road_gold.png")
-      ),
+      large_army: await PIXI.Assets.load(require("../assets/largest_army.png")),
+      long_road: await PIXI.Assets.load(require("../assets/longest_road.png")),
 
       // cards
       brick_card: await PIXI.Assets.load(

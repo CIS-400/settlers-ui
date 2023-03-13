@@ -82,7 +82,6 @@ class TradeOfferStagingArea extends PIXI.Container {
           card,
           type: "up",
           onclick: () => {
-            console.log(SETTLERS.resStr(resource));
             this.offer.set(resource, this.offer.get(resource) + 1);
             this.offerText[i].text = this.offer.get(resource);
           },

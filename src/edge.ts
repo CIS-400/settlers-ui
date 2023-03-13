@@ -43,28 +43,23 @@ class Edge extends PIXI.Container implements Updatable {
 
   private _onclick() {
     const { game } = this.gameui;
-    const r: number = game.getRoad(this.nodes[0].id, this.nodes[1].id);
-    if (r !== -1) return;
-    game.handleAction({
-      type: SETTLERS.ActionType.BuildRoad,
-      player: game.getTurn(),
-      payload: { node0: this.nodes[0].id, node1: this.nodes[1].id },
-    });
+    const action = this.getPotentialAction();
+    if (!game.isValidAction(action).valid) return;
+    game.handleAction(action);
+    this.sprite.alpha = 1;
     this.update();
   }
 
   private _onmouseenter() {
     const { game } = this.gameui;
-    const r: number = game.getRoad(this.nodes[0].id, this.nodes[1].id);
-    if (r !== -1) return;
+    if (!game.isValidAction(this.getPotentialAction()).valid) return;
     this.sprite.texture = this.gameui.textures[`road_${game.getTurn()}`];
     this.sprite.alpha = 0.75;
   }
   private _onmouseleave() {
     const { game } = this.gameui;
-    const r: number = game.getRoad(this.nodes[0].id, this.nodes[1].id);
+    if (!game.isValidAction(this.getPotentialAction()).valid) return;
     this.sprite.alpha = 1;
-    if (r !== -1) return;
     this.sprite.texture = PIXI.Texture.EMPTY;
   }
   private getAngle(
@@ -74,6 +69,15 @@ class Edge extends PIXI.Container implements Updatable {
     const deltaX = x2 - x1;
     const deltaY = y2 - y1;
     return Math.atan2(deltaY, deltaX);
+  }
+
+  private getPotentialAction() {
+    const { game } = this.gameui;
+    const r: number = game.getRoad(this.nodes[0].id, this.nodes[1].id);
+    return new SETTLERS.Action(SETTLERS.ActionType.BuildRoad, game.getTurn(), {
+      node0: this.nodes[0].id,
+      node1: this.nodes[1].id,
+    });
   }
 }
 export default Edge;

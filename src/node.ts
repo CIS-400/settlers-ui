@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
-import { ActionPayload } from "settlers";
 import GameUI from "./game-ui";
 import Updatable from "./updatable";
 class Node extends PIXI.Container implements Updatable {
@@ -34,46 +33,29 @@ class Node extends PIXI.Container implements Updatable {
     const n: SETTLERS.Node = game.getNode(this.id);
     const p = n.getPlayer();
     if (n.hasCity()) {
-      this.sprite.texture = this.gameui.textures[`settlement_${p}`];
+      this.sprite.texture = this.gameui.textures[`city_${p}`];
     } else if (!n.isEmpty()) {
       this.sprite.texture = this.gameui.textures[`settlement_${p}`];
     }
+    this.sprite.alpha = 1;
   }
 
   private _onclick() {
     const { game } = this.gameui;
-    const n: SETTLERS.Node = game.getNode(this.id);
-
-    if ((!n.isEmpty() && n.getPlayer() !== game.getTurn()) || n.hasCity())
-      return;
-
-    if (n.isEmpty()) {
-      game.handleAction(
-        new SETTLERS.Action(
-          SETTLERS.ActionType.BuildSettlement,
-          game.getTurn(),
-          { node: this.id }
-        )
-      );
-    } else {
-      game.handleAction(
-        new SETTLERS.Action(SETTLERS.ActionType.BuildCity, game.getTurn(), {
-          node: this.id,
-        })
-      );
-    }
+    const action = this.getPotentialAction();
+    if (!game.isValidAction(action)) return;
+    game.handleAction(action);
     this.update();
   }
 
   private _onmouseenter() {
     const { game } = this.gameui;
     const n: SETTLERS.Node = game.getNode(this.id);
-    const p = game.getTurn();
-    if (!n.isEmpty() && n.getPlayer() === p) {
-      this.sprite.texture = this.gameui.textures[`settlement_${p}`]; // TODO: change to city
-      this.sprite.alpha = 0.75;
-    } else if (n.isEmpty()) {
-      this.sprite.texture = this.gameui.textures[`settlement_${p}`];
+    if (game.isValidAction(this.getPotentialAction()).valid) {
+      this.sprite.texture =
+        this.gameui.textures[
+          `${n.isEmpty() ? "settlement" : "city"}_${game.getTurn()}`
+        ];
       this.sprite.alpha = 0.75;
     }
   }
@@ -81,14 +63,25 @@ class Node extends PIXI.Container implements Updatable {
     const { game } = this.gameui;
     const n: SETTLERS.Node = game.getNode(this.id);
     const p = n.getPlayer();
+    if (!game.isValidAction(this.getPotentialAction()).valid) return;
     if (n.hasCity()) {
-      this.sprite.texture = this.gameui.textures[`settlement_${p}`]; // TODO: change to city
+      this.sprite.texture = this.gameui.textures[`city_${p}`];
     } else if (!n.isEmpty()) {
       this.sprite.texture = this.gameui.textures[`settlement_${p}`];
     } else {
       this.sprite.texture = PIXI.Texture.EMPTY;
     }
-    this.sprite.alpha = 1;
+  }
+
+  private getPotentialAction() {
+    const { game } = this.gameui;
+    return new SETTLERS.Action(
+      game.getNode(this.id).isEmpty()
+        ? SETTLERS.ActionType.BuildSettlement
+        : SETTLERS.ActionType.BuildCity,
+      game.getTurn(),
+      { node: this.id }
+    );
   }
 }
 export default Node;
