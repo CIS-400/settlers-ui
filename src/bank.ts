@@ -2,10 +2,15 @@ import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import GameUI from "./game-ui";
 import Box from "./box";
+import Updatable from "./updatable";
 
-class Bank extends PIXI.Container {
+class Bank extends PIXI.Container implements Updatable {
+  private cardCountText: PIXI.Text[];
+  gameui: GameUI;
   constructor(gameui: GameUI) {
     super();
+    this.gameui = gameui;
+    this.cardCountText = [];
     this.y = 0;
     this.x = 0.65 * gameui.app.view.width;
 
@@ -21,8 +26,6 @@ class Bank extends PIXI.Container {
     bankPic.position.set(width / 15, height / 10);
     this.addChild(bankPic);
 
-    let resourceCardHeight = 0;
-    let resourceCardWidth = 0;
     for (let i = 0; i < CARD_TYPES; i++) {
       const isResourceCard = i < SETTLERS.NUM_RESOURCE_TYPES;
 
@@ -48,7 +51,7 @@ class Bank extends PIXI.Container {
 
       // set positions of card and number
       const x = ((i + 1) * width) / (CARD_TYPES * 1.5) + width / 6;
-      cardChild.scale.set(0.3)
+      cardChild.scale.set(0.3);
       cardChild.position.set(x, height / 9);
 
       numInBankSprite.anchor.set(0.5, 0);
@@ -56,7 +59,23 @@ class Bank extends PIXI.Container {
         x + cardChild.width / 2,
         height / 8 + cardChild.height
       );
+      this.cardCountText.push(numInBankSprite);
       this.addChild(cardChild, numInBankSprite);
+    }
+  }
+
+  update() {
+    // CARD_TYPES includes +1 for dev card
+    const CARD_TYPES = SETTLERS.NUM_RESOURCE_TYPES + 1;
+    for (let i = 0; i < CARD_TYPES; i++) {
+      const isResourceCard = i < SETTLERS.NUM_RESOURCE_TYPES;
+      const resource = i as SETTLERS.Resource;
+
+      const numInBank = isResourceCard
+        ? this.gameui.game.bank.get(resource)
+        : this.gameui.game.deck.size();
+
+      this.cardCountText[i].text = numInBank;
     }
   }
 }
