@@ -99,9 +99,9 @@ class GameUI {
     this.board.update();
     this.dice.update();
     this.endTurn.update();
-    //this.playerInfo.update();
-    //this.bank.update();
-    //this.inventory.update();
+    this.playerInfo.update();
+    this.bank.update();
+    this.inventory.update();
   }
 
   getUI() {

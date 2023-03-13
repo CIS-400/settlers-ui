@@ -10,6 +10,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
   private devCardsText: PIXI.Text[];
   private knightsText: PIXI.Text[];
   private roadsText: PIXI.Text[];
+  private pfps: PIXI.Sprite[];
   gameui: GameUI;
 
   constructor(gameui: GameUI) {
@@ -20,6 +21,8 @@ class PlayerInfo extends PIXI.Container implements Updatable {
     this.devCardsText = [];
     this.knightsText = [];
     this.roadsText = [];
+
+    this.pfps = []
 
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
     this.x = 0.7 * gameui.app.view.width;
@@ -32,12 +35,15 @@ class PlayerInfo extends PIXI.Container implements Updatable {
 
       // TODO: display player names
       const pfp = new PIXI.Sprite(gameui.textures[`player_icon${index}`]);
+      pfp.alpha = (gameui.game.getTurn() == index) ? 1 : 0.3;
       pfp.width = height * 0.4;
       pfp.height = height * 0.4;
       let x = width / 8;
       let y = height * index + 0.25 * height;
       pfp.position.set(x, y);
       this.addChild(pfp);
+      this.pfps.push(pfp);
+
       const victoryPs = new PIXI.Text(p.victoryPoints, {
         fontFamily: "Arial",
         fontSize: 14,
@@ -144,7 +150,8 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.numCardsText[i].text = player.resources.size();
       this.devCardsText[i].text = player.devCards.size();
       this.knightsText[i].text = player.knightsPlayed;
-      this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i)
+      this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i);
+      this.pfps[i].alpha = (this.gameui.game.getTurn() == i) ? 1 : 0.3;
     });
   }
 }
