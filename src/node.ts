@@ -54,7 +54,9 @@ class Node extends PIXI.Container implements Updatable {
     if (game.isValidAction(this.getPotentialAction()).valid) {
       this.sprite.texture =
         this.gameui.textures[
-          `${n.isEmpty() ? "settlement" : "city"}_${game.getTurn()}`
+          `${
+            n.isEmpty() ? "settlement" : "city"
+          }_${this.gameui.getPerspective()}`
         ];
       this.sprite.alpha = 0.75;
     }
@@ -79,7 +81,7 @@ class Node extends PIXI.Container implements Updatable {
       game.getNode(this.id).isEmpty()
         ? SETTLERS.ActionType.BuildSettlement
         : SETTLERS.ActionType.BuildCity,
-      game.getTurn(),
+      this.gameui.getPerspective(),
       { node: this.id }
     );
   }

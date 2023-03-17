@@ -35,7 +35,7 @@ class EndTurn extends PIXI.Sprite implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.EndTurn,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       {}
     );
   }

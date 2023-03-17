@@ -54,7 +54,7 @@ class Dice extends PIXI.Container implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.Roll,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       {}
     );
   }

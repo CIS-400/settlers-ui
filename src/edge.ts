@@ -53,7 +53,8 @@ class Edge extends PIXI.Container implements Updatable {
   private _onmouseenter() {
     const { game } = this.gameui;
     if (!game.isValidAction(this.getPotentialAction()).valid) return;
-    this.sprite.texture = this.gameui.textures[`road_${game.getTurn()}`];
+    this.sprite.texture =
+      this.gameui.textures[`road_${this.gameui.getPerspective()}`];
     this.sprite.alpha = 0.75;
   }
   private _onmouseleave() {
@@ -74,10 +75,14 @@ class Edge extends PIXI.Container implements Updatable {
   private getPotentialAction() {
     const { game } = this.gameui;
     const r: number = game.getRoad(this.nodes[0].id, this.nodes[1].id);
-    return new SETTLERS.Action(SETTLERS.ActionType.BuildRoad, game.getTurn(), {
-      node0: this.nodes[0].id,
-      node1: this.nodes[1].id,
-    });
+    return new SETTLERS.Action(
+      SETTLERS.ActionType.BuildRoad,
+      this.gameui.getPerspective(),
+      {
+        node0: this.nodes[0].id,
+        node1: this.nodes[1].id,
+      }
+    );
   }
 }
 export default Edge;

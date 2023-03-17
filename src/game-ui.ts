@@ -9,6 +9,7 @@ import Button from "./button";
 import PlayerInfo from "./player-info";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
 import EndTurn from "./end-turn";
+import BuyDevCard from "./buy-dev-card";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -16,6 +17,8 @@ class GameUI {
   static BOARD_HEIGHT_RATIO = 0.85;
   readonly game: Game;
   readonly app: PIXI.Application<PIXI.ICanvas>;
+  private perspective: number;
+  followTurnPerspective: boolean;
   bank: Bank;
   board: Board;
   inventory: Inventory;
@@ -27,6 +30,8 @@ class GameUI {
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
+    this.perspective = game.getTurn();
+    this.followTurnPerspective = true;
     this.app = new PIXI.Application({
       backgroundColor: "#78bac2",
       resizeTo: container,
@@ -61,17 +66,7 @@ class GameUI {
     this.tradeOfferStagingArea.visible = false;
     this.app.stage.addChild(this.tradeOfferStagingArea);
 
-    const devCardButtonIcon = new PIXI.Sprite(this.textures["dev_card"]);
-    devCardButtonIcon.scale.set(0.5);
-    const buyDevCard = new Button({
-      x: this.app.view.width * 0.525,
-      y:
-        GameUI.BOARD_HEIGHT_RATIO * this.app.view.height +
-        0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
-      width: 0.1 * width,
-      height: 0.9 * (1 - GameUI.BOARD_HEIGHT_RATIO) * this.app.view.height,
-      content: devCardButtonIcon,
-    });
+    const buyDevCard = new BuyDevCard(this);
     this.app.stage.addChild(buyDevCard);
 
     const trade = new Button({
@@ -96,6 +91,9 @@ class GameUI {
   }
 
   update() {
+    if (this.followTurnPerspective) {
+      this.perspective = this.game.getTurn();
+    }
     this.board.update();
     this.dice.update();
     this.endTurn.update();
@@ -106,6 +104,15 @@ class GameUI {
 
   getUI() {
     return this.app.view;
+  }
+
+  getPerspective() {
+    return this.perspective;
+  }
+
+  setPerspective(perspective: number) {
+    this.perspective = perspective;
+    this.update();
   }
 
   async loadTextures() {

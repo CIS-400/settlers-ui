@@ -42,7 +42,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
 
       // TODO: display player names
       const pfp = new PIXI.Sprite(gameui.textures[`player_icon${index}`]);
-      pfp.alpha = gameui.game.getTurn() === index ? 1 : 0.3;
+      pfp.alpha = gameui.getPerspective() === index ? 1 : 0.3;
       pfp.width = height * 0.4;
       pfp.height = height * 0.4;
       let x = width / 8;

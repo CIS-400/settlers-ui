@@ -18,8 +18,7 @@ class Tile extends PIXI.Sprite implements Updatable {
     const num = tile.getNumber();
     let x = 0.5 * (nodes[tile.nodes[0]].x + nodes[tile.nodes[5]].x);
     let y = 0.5 * (nodes[tile.nodes[0]].y + nodes[tile.nodes[5]].y);
-    
-    
+
     this.scale.set(0.75);
     this.anchor.set(0.5);
     this.position.set(x, y);
@@ -37,7 +36,7 @@ class Tile extends PIXI.Sprite implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.MoveRobber,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       {
         to: this.id,
       }
@@ -57,7 +56,10 @@ class Tile extends PIXI.Sprite implements Updatable {
     const num = game.getTile(this.id).getNumber();
     const isDesert = num === 7;
     if (isDesert) {
-      this.token.texture = game.getRobberTile() === this.id ? this.gameui.textures['robber'] : PIXI.Texture.EMPTY;
+      this.token.texture =
+        game.getRobberTile() === this.id
+          ? this.gameui.textures["robber"]
+          : PIXI.Texture.EMPTY;
     } else {
       this.token.texture =
         this.gameui.textures[

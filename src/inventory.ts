@@ -33,7 +33,9 @@ class Inventory extends PIXI.Container implements Updatable {
           gameui.textures[`${SETTLERS.resStr(i as SETTLERS.Resource)}_card`]
         );
         text = new PIXI.Text(
-          game.players[game.getTurn()].resources.get(i as SETTLERS.Resource)
+          game.players[gameui.getPerspective()].resources.get(
+            i as SETTLERS.Resource
+          )
         );
       } else {
         card = new PIXI.Sprite(
@@ -46,7 +48,7 @@ class Inventory extends PIXI.Container implements Updatable {
           ]
         );
         text = new PIXI.Text(
-          game.players[game.getTurn()].devCards.get(
+          game.players[gameui.getPerspective()].devCards.get(
             (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
           )
         );
@@ -66,11 +68,11 @@ class Inventory extends PIXI.Container implements Updatable {
     for (let i = 0; i < CARD_TYPES; i++) {
       if (i < SETTLERS.NUM_RESOURCE_TYPES) {
         this.cardCountText[i].text = this.gameui.game.players[
-          this.gameui.game.getTurn()
+          this.gameui.getPerspective()
         ].resources.get(i as SETTLERS.Resource);
       } else {
         this.cardCountText[i].text = this.gameui.game.players[
-          this.gameui.game.getTurn()
+          this.gameui.getPerspective()
         ].devCards.get((i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard);
       }
     }
