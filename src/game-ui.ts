@@ -7,6 +7,7 @@ import Dice from "./dice";
 import Bank from "./bank";
 import Button from "./button";
 import PlayerInfo from "./player-info";
+import Robbed from "./robbed";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
 import EndTurn from "./end-turn";
 import BuyDevCard from "./buy-dev-card";
@@ -26,6 +27,7 @@ class GameUI {
   dice: Dice;
   endTurn: EndTurn;
   playerInfo: PlayerInfo;
+  robbed: Robbed;
   tradeOfferStagingArea: TradeOfferStagingArea;
   discard: Discard;
   textures: Record<string, any>;
@@ -63,6 +65,10 @@ class GameUI {
 
     this.playerInfo = new PlayerInfo(this);
     this.app.stage.addChild(this.playerInfo);
+
+    this.robbed = new Robbed(this);
+    this.robbed.visible = true; //TODO, should be false. true for testing rn
+    this.app.stage.addChild(this.robbed);
 
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
     this.tradeOfferStagingArea.visible = false;
@@ -106,7 +112,12 @@ class GameUI {
     this.playerInfo.update();
     this.bank.update();
     this.inventory.update();
+<<<<<<< HEAD
     this.discard.update();
+=======
+
+    this.robbed.update(); //TODO DELETE!
+>>>>>>> c15db94 (robber ui, when to call robberui.update()?)
   }
 
   getUI() {

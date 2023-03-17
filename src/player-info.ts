@@ -1,4 +1,3 @@
-import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
 import GameUI from "./game-ui";
 import Box from "./box";
