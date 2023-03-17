@@ -67,7 +67,7 @@ class GameUI {
     this.app.stage.addChild(this.playerInfo);
 
     this.robbed = new Robbed(this);
-    this.robbed.visible = true; //TODO, should be false. true for testing rn
+    this.robbed.visible = false; //TODO, should be false. true for testing rn
     this.app.stage.addChild(this.robbed);
 
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);

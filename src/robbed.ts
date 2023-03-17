@@ -7,7 +7,6 @@ import Updatable from "./updatable";
 
 class Robbed extends PIXI.Container implements Updatable {
   gameui: GameUI;
-  private pfps: PIXI.Sprite[];
   private widthBox: number;
   private heightBox: number;
   private chosenVictim: number;
@@ -20,15 +19,25 @@ class Robbed extends PIXI.Container implements Updatable {
     this.widthBox = 0.3 * gameui.app.view.width;
     this.heightBox = GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height / 5;
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
+    this.addRobberText();
+  }
 
+  private addRobberText() {
     const robberText = new PIXI.Text("Choose a player to steal 1 random card", {
-      fontFamily: "Arial",
-      fontSize: 14,
-      fill: 0x000000,
-    });
-    robberText.anchor.set(0.5, 0);
-    robberText.position.set(this.x/4.5, this.y/10);
-    this.addChild(robberText);
+        fontFamily: "Arial",
+        fontSize: 14,
+        fill: 0x000000,
+      });
+      robberText.anchor.set(0.5, 0);
+      robberText.position.set(this.x/4.5, this.y/10);
+      this.addChild(robberText);
+  }
+
+  // for each new robber time moment, clear all children then draw back box and text
+  private clearVictims() {
+    this.removeChildren();
+    this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
+    this.addRobberText();
   }
 
   _onclick() {
@@ -49,11 +58,19 @@ class Robbed extends PIXI.Container implements Updatable {
   }
 
   update() {
-    // clear pfps
-    this.pfps = [];
+    // check if in robbing state
+    if (this.gameui.game.getTurnState() !== SETTLERS.TurnState.Robbing) {
+        return;
+    }
 
-    // const victims = [0, 1, 2]; // TODO delete
+    // make ui visible
+    this.visible = true;
+
+    // clear previous, old pfps
+    this.clearVictims()
+
     const victims = this.gameui.game.getRobberVictims();
+    console.log('victims', victims)
     const numVictims = victims.length;
     for (let i = 0; i < numVictims; i++) {
         const victim = victims[i];
@@ -71,9 +88,9 @@ class Robbed extends PIXI.Container implements Updatable {
         pfp.on("click", (event) => {
             this.chosenVictim = victims[i];
             this._onclick();
+            this.visible = false;
           });
         // pfp.on("click", this._onclick.bind(this));
-        this.pfps.push(pfp);
     }
   }
 }
