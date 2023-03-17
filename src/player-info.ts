@@ -22,7 +22,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
     this.knightsText = [];
     this.roadsText = [];
 
-    this.pfps = []
+    this.pfps = [];
 
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
     this.x = 0.7 * gameui.app.view.width;
@@ -30,12 +30,19 @@ class PlayerInfo extends PIXI.Container implements Updatable {
     const height = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 10;
 
     gameui.game.players.map((p, index) => {
+      // for text sprite
+      const defaultFont = {
+        fontFamily: "Arial",
+        fontSize: 14,
+        fill: 0x000000,
+      };
+
       // display player information inside boxes
       this.addChild(new Box(0, height * index + 1, width, height));
 
       // TODO: display player names
       const pfp = new PIXI.Sprite(gameui.textures[`player_icon${index}`]);
-      pfp.alpha = (gameui.game.getTurn() === index) ? 1 : 0.3;
+      pfp.alpha = gameui.game.getTurn() === index ? 1 : 0.3;
       pfp.width = height * 0.4;
       pfp.height = height * 0.4;
       let x = width / 8;
@@ -44,11 +51,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.addChild(pfp);
       this.pfps.push(pfp);
 
-      const victoryPs = new PIXI.Text(p.victoryPoints, {
-        fontFamily: "Arial",
-        fontSize: 14,
-        fill: 0x000000,
-      });
+      const victoryPs = new PIXI.Text(p.victoryPoints, defaultFont);
       victoryPs.anchor.set(0.5, 0);
       victoryPs.position.set(x + pfp.width / 2, y + pfp.height);
       this.addChild(victoryPs);
@@ -63,11 +66,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       y = height * index + 0.1 * height;
       resourceCard.position.set(x, y);
       this.addChild(resourceCard);
-      const numCardsHand = new PIXI.Text(p.resources.size(), {
-        fontFamily: "Arial",
-        fontSize: 14,
-        fill: 0x000000,
-      });
+      const numCardsHand = new PIXI.Text(p.resources.size(), defaultFont);
       numCardsHand.anchor.set(0.5, 0);
       numCardsHand.position.set(
         x + resourceCard.width / 2,
@@ -85,11 +84,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       y = height * index + 0.1 * height;
       devCard.position.set(x, y);
       this.addChild(devCard);
-      const numDevCards = new PIXI.Text(p.devCards.size(), {
-        fontFamily: "Arial",
-        fontSize: 14,
-        fill: 0x000000,
-      });
+      const numDevCards = new PIXI.Text(p.devCards.size(), defaultFont);
       numDevCards.anchor.set(0.5, 0);
       numDevCards.position.set(x + devCard.width / 2, y + devCard.height);
       this.addChild(numDevCards);
@@ -107,11 +102,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       y = height * index + 0.1 * height;
       largeArmy.position.set(x, y);
       this.addChild(largeArmy);
-      const knightsPlayed = new PIXI.Text(p.knightsPlayed, {
-        fontFamily: "Arial",
-        fontSize: 14,
-        fill: 0x000000,
-      });
+      const knightsPlayed = new PIXI.Text(p.knightsPlayed, defaultFont);
       knightsPlayed.anchor.set(0.5, 0);
       knightsPlayed.position.set(x + largeArmy.width / 2, y + largeArmy.height);
       this.addChild(knightsPlayed);
@@ -131,11 +122,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.addChild(longRoad);
       const numLongestRoad = new PIXI.Text(
         gameui.game.board.getLongestRoad(index),
-        {
-          fontFamily: "Arial",
-          fontSize: 14,
-          fill: 0x000000,
-        }
+        defaultFont
       );
       numLongestRoad.anchor.set(0.5, 0);
       numLongestRoad.position.set(x + longRoad.width / 2, y + longRoad.height);
@@ -143,7 +130,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.roadsText.push(numLongestRoad);
     });
   }
-  
+
   update() {
     this.gameui.game.players.map((player, i) => {
       this.victoryPText[i].text = player.victoryPoints;
@@ -151,7 +138,7 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       this.devCardsText[i].text = player.devCards.size();
       this.knightsText[i].text = player.knightsPlayed;
       this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i);
-      this.pfps[i].alpha = (this.gameui.game.getTurn() === i) ? 1 : 0.3;
+      this.pfps[i].alpha = this.gameui.game.getTurn() === i ? 1 : 0.3;
     });
   }
 }

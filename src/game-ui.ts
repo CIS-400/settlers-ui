@@ -117,6 +117,9 @@ class GameUI {
       none_tile: await PIXI.Assets.load(
         require("../assets/tiles/desert_without_robber.png")
       ),
+      desert_with_robber: await PIXI.Assets.load(
+        require("../assets/tiles/desert_with_robber.png")
+      ),
       ore_tile: await PIXI.Assets.load(require("../assets/tiles/ore_tile.png")),
       grain_tile: await PIXI.Assets.load(
         require("../assets/tiles/wheat_tile.png")

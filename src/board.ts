@@ -109,6 +109,7 @@ class Board extends PIXI.Container implements Updatable {
   update() {
     this.edges.forEach((e) => e.update());
     this.nodes.forEach((e) => e.update());
+    this.tiles.forEach((e) => e.update());
   }
 }
 
