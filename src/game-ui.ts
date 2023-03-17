@@ -112,12 +112,9 @@ class GameUI {
     this.playerInfo.update();
     this.bank.update();
     this.inventory.update();
-<<<<<<< HEAD
     this.discard.update();
-=======
 
     this.robbed.update(); //TODO DELETE!
->>>>>>> c15db94 (robber ui, when to call robberui.update()?)
   }
 
   getUI() {
