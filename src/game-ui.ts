@@ -10,6 +10,7 @@ import PlayerInfo from "./player-info";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
 import EndTurn from "./end-turn";
 import BuyDevCard from "./buy-dev-card";
+import Discard from "./discard";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -26,6 +27,7 @@ class GameUI {
   endTurn: EndTurn;
   playerInfo: PlayerInfo;
   tradeOfferStagingArea: TradeOfferStagingArea;
+  discard: Discard;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -88,9 +90,13 @@ class GameUI {
 
     this.endTurn = new EndTurn(this);
     this.app.stage.addChild(this.endTurn);
+
+    this.discard = new Discard(this);
+    this.app.stage.addChild(this.discard);
   }
 
   update() {
+    console.log(this.game.toLog());
     if (this.followTurnPerspective) {
       this.perspective = this.game.getTurn();
     }
@@ -100,6 +106,7 @@ class GameUI {
     this.playerInfo.update();
     this.bank.update();
     this.inventory.update();
+    this.discard.update();
   }
 
   getUI() {
