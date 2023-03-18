@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
 import Box from "./box";
-import Button from "./button";
 import GameUI from "./game-ui";
 import Updatable from "./updatable";
 
@@ -17,20 +16,20 @@ class Robbed extends PIXI.Container implements Updatable {
     this.x = 0.7 * gameui.app.view.width;
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 1.7;
     this.widthBox = 0.3 * gameui.app.view.width;
-    this.heightBox = GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height / 5;
+    this.heightBox = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 5;
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
     this.addRobberText();
   }
 
   private addRobberText() {
     const robberText = new PIXI.Text("Choose a player to steal 1 random card", {
-        fontFamily: "Arial",
-        fontSize: 14,
-        fill: 0x000000,
-      });
-      robberText.anchor.set(0.5, 0);
-      robberText.position.set(this.x/4.5, this.y/10);
-      this.addChild(robberText);
+      fontFamily: "Arial",
+      fontSize: 14,
+      fill: 0x000000,
+    });
+    robberText.anchor.set(0.5, 0);
+    robberText.position.set(this.x / 4.5, this.y / 10);
+    this.addChild(robberText);
   }
 
   // for each new robber time moment, clear all children then draw back box and text
@@ -49,48 +48,48 @@ class Robbed extends PIXI.Container implements Updatable {
   }
 
   private getPotentialAction() {
-    console.log(this.chosenVictim)
     return new SETTLERS.Action(
       SETTLERS.ActionType.Rob,
       this.gameui.game.getTurn(),
-      {victim: this.chosenVictim}
+      { victim: this.chosenVictim }
     );
   }
 
   update() {
     // check if in robbing state
     if (this.gameui.game.getTurnState() !== SETTLERS.TurnState.Robbing) {
-        return;
+      return;
     }
 
     // make ui visible
     this.visible = true;
 
     // clear previous, old pfps
-    this.clearVictims()
+    this.clearVictims();
 
     const victims = this.gameui.game.getRobberVictims();
-    console.log('victims', victims)
     const numVictims = victims.length;
     for (let i = 0; i < numVictims; i++) {
-        const victim = victims[i];
-        const pfp = new PIXI.Sprite(this.gameui.textures[`player_icon${victim}`]);
-        pfp.width = this.heightBox * 0.3;
-        pfp.height = this.heightBox * 0.3;
-        pfp.anchor.set(0.5, 0)
+      const victim = victims[i];
+      const pfp = new PIXI.Sprite(this.gameui.textures[`player_icon${victim}`]);
+      pfp.width = this.heightBox * 0.3;
+      pfp.height = this.heightBox * 0.3;
+      pfp.anchor.set(0.5, 0);
 
-        let x = this.widthBox * i/(numVictims+1) + this.widthBox/(numVictims+1);
-        let y = this.heightBox / 2;
-        pfp.position.set(x, y);
-        this.addChild(pfp);
+      const x =
+        (this.widthBox * i) / (numVictims + 1) +
+        this.widthBox / (numVictims + 1);
+      const y = this.heightBox / 2;
+      pfp.position.set(x, y);
+      this.addChild(pfp);
 
-        pfp.interactive = true;
-        pfp.on("click", (event) => {
-            this.chosenVictim = victims[i];
-            this._onclick();
-            this.visible = false;
-          });
-        // pfp.on("click", this._onclick.bind(this));
+      pfp.interactive = true;
+      pfp.on("click", (event) => {
+        this.chosenVictim = victims[i];
+        this._onclick();
+        this.visible = false;
+      });
+      // pfp.on("click", this._onclick.bind(this));
     }
   }
 }

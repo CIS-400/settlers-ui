@@ -6,6 +6,7 @@ import Inventory from "./inventory";
 import Dice from "./dice";
 import Bank from "./bank";
 import Button from "./button";
+import Monopoly from "./monopoly";
 import PlayerInfo from "./player-info";
 import Robbed from "./robbed";
 import TradeOfferStagingArea from "./trade-offer-staging-area";
@@ -27,6 +28,7 @@ class GameUI {
   dice: Dice;
   endTurn: EndTurn;
   playerInfo: PlayerInfo;
+  monopoly: Monopoly;
   robbed: Robbed;
   tradeOfferStagingArea: TradeOfferStagingArea;
   discard: Discard;
@@ -63,11 +65,15 @@ class GameUI {
     this.bank = new Bank(this);
     this.app.stage.addChild(this.bank);
 
+    this.monopoly = new Monopoly(this);
+    this.monopoly.visible = true; // TODO change to false
+    this.app.stage.addChild(this.monopoly);
+
     this.playerInfo = new PlayerInfo(this);
     this.app.stage.addChild(this.playerInfo);
 
     this.robbed = new Robbed(this);
-    this.robbed.visible = false; //TODO, should be false. true for testing rn
+    this.robbed.visible = false;
     this.app.stage.addChild(this.robbed);
 
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
@@ -114,7 +120,7 @@ class GameUI {
     this.inventory.update();
     this.discard.update();
 
-    this.robbed.update(); //TODO DELETE!
+    this.robbed.update();
   }
 
   getUI() {
