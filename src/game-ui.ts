@@ -36,6 +36,8 @@ class GameUI {
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
+    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly); // TODO, DELETE. FOR TESTING
+
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
@@ -66,14 +68,12 @@ class GameUI {
     this.app.stage.addChild(this.bank);
 
     this.monopoly = new Monopoly(this);
-    this.monopoly.visible = true; // TODO change to false
     this.app.stage.addChild(this.monopoly);
 
     this.playerInfo = new PlayerInfo(this);
     this.app.stage.addChild(this.playerInfo);
 
     this.robbed = new Robbed(this);
-    this.robbed.visible = false;
     this.app.stage.addChild(this.robbed);
 
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
@@ -120,7 +120,9 @@ class GameUI {
     this.inventory.update();
     this.discard.update();
 
+    // dev cards + robber
     this.robbed.update();
+    this.monopoly.update();
   }
 
   getUI() {

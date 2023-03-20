@@ -19,6 +19,7 @@ class Monopoly extends PIXI.Container implements Updatable {
     this.widthBox = 0.3 * gameui.app.view.width;
     this.heightBox = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 5;
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
+    this.visible = false;
 
     // render box and cards
     const CARD_TYPES = SETTLERS.NUM_RESOURCE_TYPES;

@@ -38,15 +38,47 @@ class Inventory extends PIXI.Container implements Updatable {
           )
         );
       } else {
+        const devCard = i - SETTLERS.NUM_RESOURCE_TYPES;
         card = new PIXI.Sprite(
           gameui.textures[
-            `${SETTLERS.devCardStr(
-              (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
-            )
+            `${SETTLERS.devCardStr(devCard as SETTLERS.DevCard)
               .toLowerCase()
               .replace(/\s/g, "")}_card`
           ]
         );
+
+        // make dev cards playable
+        const isMonopoly = devCard === SETTLERS.DevCard.Monopoly;
+        const isKnight = devCard === SETTLERS.DevCard.Knight;
+        const isYoP = devCard === SETTLERS.DevCard.YearOfPlenty;
+        const isRoadBuilder = devCard === SETTLERS.DevCard.RoadBuilder;
+        if (isMonopoly || isKnight || isYoP || isRoadBuilder) {
+          card.interactive = true;
+          card.on("click", (event) => {
+            if (
+              (isMonopoly &&
+                game.players[gameui.getPerspective()].devCards.has(
+                  SETTLERS.DevCard.Monopoly
+                )) ||
+              (isKnight &&
+                game.players[gameui.getPerspective()].devCards.has(
+                  SETTLERS.DevCard.Knight
+                )) ||
+              (isYoP &&
+                game.players[gameui.getPerspective()].devCards.has(
+                  SETTLERS.DevCard.YearOfPlenty
+                )) ||
+              (isRoadBuilder &&
+                game.players[gameui.getPerspective()].devCards.has(
+                  SETTLERS.DevCard.RoadBuilder
+                ))
+            ) {
+              this._onclick(devCard);
+            }
+          });
+        }
+
+        // text stuff
         text = new PIXI.Text(
           game.players[gameui.getPerspective()].devCards.get(
             (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
@@ -75,6 +107,46 @@ class Inventory extends PIXI.Container implements Updatable {
           this.gameui.getPerspective()
         ].devCards.get((i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard);
       }
+    }
+  }
+
+  _onclick(devCard: SETTLERS.DevCard) {
+    const { game } = this.gameui;
+    const action = this.getPotentialAction(devCard);
+    if (!game.isValidAction(action).valid) return;
+    game.handleAction(action);
+    console.log('BEFORE UPDATED!!!!!!!!!')
+    this.gameui.update();
+    console.log('UPDATED!!!!!!!!!')
+  }
+
+  private getPotentialAction(devCard: SETTLERS.DevCard) {
+    switch (devCard) {
+      case SETTLERS.DevCard.Knight:
+        console.log('knight played')
+        return new SETTLERS.Action(
+          SETTLERS.ActionType.PlayRobber,
+          this.gameui.game.getTurn(),
+          {}
+        );
+      case SETTLERS.DevCard.YearOfPlenty:
+        return new SETTLERS.Action(
+          SETTLERS.ActionType.PlayYearOfPlenty,
+          this.gameui.game.getTurn(),
+          {}
+        );
+      case SETTLERS.DevCard.Monopoly:
+        return new SETTLERS.Action(
+          SETTLERS.ActionType.PlayMonopoly,
+          this.gameui.game.getTurn(),
+          {}
+        );
+      default: // road builder case
+        return new SETTLERS.Action(
+          SETTLERS.ActionType.PlayRoadBuilder,
+          this.gameui.game.getTurn(),
+          {}
+        );
     }
   }
 }

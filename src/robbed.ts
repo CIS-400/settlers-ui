@@ -19,6 +19,7 @@ class Robbed extends PIXI.Container implements Updatable {
     this.heightBox = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 5;
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
     this.addRobberText();
+    this.visible = false;
   }
 
   private addRobberText() {
