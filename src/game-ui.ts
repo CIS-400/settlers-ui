@@ -108,7 +108,7 @@ class GameUI {
   }
 
   update() {
-    console.log(this.game.toLog());
+    //console.log(this.game.toLog());
     if (this.followTurnPerspective) {
       this.perspective = this.game.getTurn();
     }

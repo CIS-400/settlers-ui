@@ -10,7 +10,6 @@ class Inventory extends PIXI.Container implements Updatable {
   constructor(gameui: GameUI) {
     super();
     this.gameui = gameui;
-
     this.y =
       0.05 * (1 - GameUI.BOARD_HEIGHT_RATIO) * gameui.app.view.height +
       GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height;

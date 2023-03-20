@@ -8,7 +8,7 @@ async function init() {
   const gameui = new GameUI(new Game(), pixiContainer);
   pixiContainer.appendChild(gameui.getUI());
   const radios = document.getElementsByName("perspective");
-  let persp;
+  let persp = 0;
   radios.forEach((radio, index) => {
     radio.addEventListener("click", () => {
       persp = index;

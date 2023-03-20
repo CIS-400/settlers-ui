@@ -5,6 +5,7 @@ import Button from "./button";
 import GameUI from "./game-ui";
 
 class TradeOfferStagingArea extends PIXI.Container {
+  readonly gameui: GameUI;
   private offer: SETTLERS.ResourceBundle;
   private request: SETTLERS.ResourceBundle;
   private offerText: PIXI.Text[];
@@ -12,12 +13,14 @@ class TradeOfferStagingArea extends PIXI.Container {
 
   constructor(gameui: GameUI) {
     super();
+    this.gameui = gameui;
     this.offerText = [];
     this.requestText = [];
     this.offer = new SETTLERS.ResourceBundle();
     this.request = new SETTLERS.ResourceBundle();
     this.x = 0.65 * gameui.app.view.width;
     this.y = gameui.app.view.height / 2;
+    this.reset = this.reset.bind(this);
     const width = gameui.app.view.width - this.x;
     const height = 0.3 * gameui.app.view.height;
 
@@ -34,9 +37,7 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: tradeWithBankIcon,
-        onclick: () => {
-          this.visible = false;
-        },
+        onclick: this.tradeWithBank.bind(this),
       })
     );
     const acceptIcon = new PIXI.Sprite(gameui.textures["accept"]);
@@ -48,9 +49,7 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: acceptIcon,
-        onclick: () => {
-          this.visible = false;
-        },
+        onclick: this.sendTradeOffer.bind(this),
       })
     );
     const declineIcon = new PIXI.Sprite(gameui.textures["decline"]);
@@ -62,9 +61,7 @@ class TradeOfferStagingArea extends PIXI.Container {
         width: 0.2 * width,
         height: 0.9 * BTN_AREA_HEIGHT,
         content: declineIcon,
-        onclick: () => {
-          this.visible = false;
-        },
+        onclick: this.reset,
       })
     );
     let x: number, card: PIXI.Sprite, text: PIXI.Text;
@@ -118,6 +115,7 @@ class TradeOfferStagingArea extends PIXI.Container {
           card,
           type: "down",
           onclick: () => {
+            if (this.request.get(resource) == 0) return;
             this.request.set(resource, this.request.get(resource) - 1);
             this.requestText[i].text = this.request.get(resource);
           },
@@ -140,6 +138,50 @@ class TradeOfferStagingArea extends PIXI.Container {
       this.addChild(text);
       this.requestText.push(text);
     }
+  }
+
+  private sendTradeOffer() {
+    const { game } = this.gameui;
+    const action = new SETTLERS.Action(
+      SETTLERS.ActionType.MakeTradeOffer,
+      this.gameui.getPerspective(),
+      {
+        offer: this.offer,
+        request: this.request,
+      }
+    );
+    if (game.isValidAction(action).valid) {
+      game.handleAction(action);
+      console.log(game.toLog());
+      this.reset();
+      this.gameui.update();
+    }
+  }
+  private tradeWithBank() {
+    const { game } = this.gameui;
+    const action = new SETTLERS.Action(
+      SETTLERS.ActionType.Exchange,
+      this.gameui.getPerspective(),
+      {
+        offer: [...Array(SETTLERS.NUM_RESOURCE_TYPES)].findIndex(
+          (_, i) => this.offer.get(i as SETTLERS.Resource) > 0
+        ),
+        request: [...Array(SETTLERS.NUM_RESOURCE_TYPES)].findIndex(
+          (_, i) => this.request.get(i as SETTLERS.Resource) > 0
+        ),
+      }
+    );
+    console.log(game.isValidAction(action));
+    if (game.isValidAction(action).valid) {
+      game.handleAction(action);
+      this.reset();
+      this.gameui.update();
+    }
+  }
+  private reset() {
+    this.visible = false;
+    this.offer = new SETTLERS.ResourceBundle();
+    this.request = new SETTLERS.ResourceBundle();
   }
 
   private makeArrow(
