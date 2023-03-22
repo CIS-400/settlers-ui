@@ -152,7 +152,6 @@ class TradeOfferStagingArea extends PIXI.Container {
     );
     if (game.isValidAction(action).valid) {
       game.handleAction(action);
-      console.log(game.toLog());
       this.reset();
       this.gameui.update();
     }
@@ -171,7 +170,6 @@ class TradeOfferStagingArea extends PIXI.Container {
         ),
       }
     );
-    console.log(game.isValidAction(action));
     if (game.isValidAction(action).valid) {
       game.handleAction(action);
       this.reset();

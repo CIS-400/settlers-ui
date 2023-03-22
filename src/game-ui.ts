@@ -13,6 +13,7 @@ import TradeOfferStagingArea from "./trade-offer-staging-area";
 import EndTurn from "./end-turn";
 import BuyDevCard from "./buy-dev-card";
 import Discard from "./discard";
+import TradeOffers from "./trade-offers";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -32,12 +33,32 @@ class GameUI {
   robbed: Robbed;
   tradeOfferStagingArea: TradeOfferStagingArea;
   discard: Discard;
+  tradeOffers: TradeOffers;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
-    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly); // TODO, DELETE. FOR TESTING
-
+    // TODO, DELETE. FOR TESTING
+    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly);
+    game.tradeOffers.push(
+      new SETTLERS.TradeOffer(
+        0,
+        0,
+        0,
+        new SETTLERS.ResourceBundle([1, 1, 0, 1, 0]),
+        new SETTLERS.ResourceBundle([0, 0, 3, 1, 0])
+      )
+    );
+    game.tradeOffers.push(
+      new SETTLERS.TradeOffer(
+        1,
+        0,
+        1,
+        new SETTLERS.ResourceBundle([1, 0, 0, 0, 1]),
+        new SETTLERS.ResourceBundle([0, 0, 0, 1, 1])
+      )
+    );
+    //
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
@@ -105,6 +126,9 @@ class GameUI {
 
     this.discard = new Discard(this);
     this.app.stage.addChild(this.discard);
+
+    this.tradeOffers = new TradeOffers(this);
+    this.app.stage.addChild(this.tradeOffers);
   }
 
   update() {
@@ -119,6 +143,7 @@ class GameUI {
     this.bank.update();
     this.inventory.update();
     this.discard.update();
+    this.tradeOffers.update();
 
     // dev cards + robber
     this.robbed.update();
