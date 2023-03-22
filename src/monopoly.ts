@@ -21,6 +21,18 @@ class Monopoly extends PIXI.Container implements Updatable {
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
     this.visible = false;
 
+    const monopolyText = new PIXI.Text(
+      "Select resource all other players must give you",
+      {
+        fontFamily: "Arial",
+        fontSize: 13,
+        fill: 0x000000,
+      }
+    );
+    monopolyText.anchor.set(0.5, 0);
+    monopolyText.position.set(this.x / 4.5, this.y / 15);
+    this.addChild(monopolyText);
+
     // render box and cards
     const CARD_TYPES = SETTLERS.NUM_RESOURCE_TYPES;
     for (let i = 0; i < CARD_TYPES; i++) {
@@ -30,9 +42,10 @@ class Monopoly extends PIXI.Container implements Updatable {
       const cardChild = new PIXI.Sprite(
         this.gameui.textures[`${resourceStr.toLowerCase()}_card`]
       );
-      
-      const x = (this.widthBox * i) / (CARD_TYPES + 1) +
-      this.widthBox / (CARD_TYPES + 1);
+
+      const x =
+        (this.widthBox * i) / (CARD_TYPES + 1) +
+        this.widthBox / (CARD_TYPES + 1);
 
       cardChild.scale.set(0.3);
       cardChild.position.set(x, this.heightBox / 2.5);
@@ -45,22 +58,8 @@ class Monopoly extends PIXI.Container implements Updatable {
       });
 
       this.addChild(cardChild);
-
-      const monopolyText = new PIXI.Text("Select resource all other players must give you", {
-        fontFamily: "Arial",
-        fontSize: 13,
-        fill: 0x000000,
-      });
-      monopolyText.anchor.set(0.5, 0);
-      monopolyText.position.set(this.x / 4.5, this.y / 15);
-      this.addChild(monopolyText);
     }
   }
-
-//   private clearPrevious() {
-//     this.removeChildren();
-//     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
-//   }
 
   update() {
     // check if in choosing resource Monopoly state
@@ -73,9 +72,6 @@ class Monopoly extends PIXI.Container implements Updatable {
 
     // make ui visible
     this.visible = true;
-
-    // clear previous, old resources
-    // this.clearPrevious();
   }
 
   _onclick() {

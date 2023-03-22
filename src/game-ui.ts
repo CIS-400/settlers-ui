@@ -14,6 +14,7 @@ import EndTurn from "./end-turn";
 import BuyDevCard from "./buy-dev-card";
 import Discard from "./discard";
 import TradeOffers from "./trade-offers";
+import YearPlenty from "./year-of-plenty";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -34,12 +35,12 @@ class GameUI {
   tradeOfferStagingArea: TradeOfferStagingArea;
   discard: Discard;
   tradeOffers: TradeOffers;
+  yearPlenty: YearPlenty;
   textures: Record<string, any>;
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
     // TODO, DELETE. FOR TESTING
-    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly);
     game.tradeOffers.push(
       new SETTLERS.TradeOffer(
         0,
@@ -59,6 +60,8 @@ class GameUI {
       )
     );
     //
+    game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty); // TODO, DELETE. FOR TESTING
+
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
@@ -100,6 +103,9 @@ class GameUI {
     this.tradeOfferStagingArea = new TradeOfferStagingArea(this);
     this.tradeOfferStagingArea.visible = false;
     this.app.stage.addChild(this.tradeOfferStagingArea);
+
+    this.yearPlenty = new YearPlenty(this);
+    this.app.stage.addChild(this.yearPlenty);
 
     const buyDevCard = new BuyDevCard(this);
     this.app.stage.addChild(buyDevCard);
@@ -146,6 +152,7 @@ class GameUI {
     this.tradeOffers.update();
 
     // dev cards + robber
+    this.yearPlenty.update();
     this.robbed.update();
     this.monopoly.update();
   }
