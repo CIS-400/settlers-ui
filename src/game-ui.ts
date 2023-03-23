@@ -59,9 +59,11 @@ class GameUI {
         new SETTLERS.ResourceBundle([0, 0, 0, 1, 1])
       )
     );
+    
+    game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
+    game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
     //
-    game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty); // TODO, DELETE. FOR TESTING
-
+    
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({

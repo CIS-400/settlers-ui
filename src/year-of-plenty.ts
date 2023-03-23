@@ -12,18 +12,21 @@ class YearPlenty extends PIXI.Container implements Updatable {
   private offer: SETTLERS.ResourceBundle;
   private offerText: PIXI.Text[];
 
+  private selectedResources: SETTLERS.Resource[];
+
   constructor(gameui: GameUI) {
     super();
     this.gameui = gameui;
     this.offer = new SETTLERS.ResourceBundle();
     this.offerText = [];
+    this.selectedResources = [];
 
     this.x = 0.7 * gameui.app.view.width;
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 1.7;
     this.widthBox = 0.3 * gameui.app.view.width;
     this.heightBox = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 5;
     this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
-    this.visible = true;
+    this.visible = false;
 
     // instructions text
     const yearText = new PIXI.Text("Take exactly two resources from the bank", {
@@ -46,7 +49,37 @@ class YearPlenty extends PIXI.Container implements Updatable {
         height: 0.5 * this.heightBox,
         content: acceptIcon,
         onclick: () => {
-          this.visible = false;
+          this.selectedResources = [];
+          const sum = this.offer.bundle.reduce((total, num) => total + num, 0);
+
+          // YEAR of Plenty needs 2 resources
+          if (sum === 2) {
+            const resources = this.offer.bundle.reduce((acc, cur, index) => {
+              if (cur !== 0) acc.push(index);
+              return acc;
+            }, []);
+
+            // got 1 type or 2 types of resources?
+            if (resources.length === 1) {
+              this.selectedResources.push(resources[0]);
+              this.selectedResources.push(resources[0]);
+            } else {
+              resources.map((resourceIndex) => {
+                this.selectedResources.push(resourceIndex);
+              });
+            }
+
+            // console.log(this.selectedResources);
+
+            // check if resources are valid (enough in bank)
+            const action = this.getPotentialAction();
+            if (gameui.game.isValidAction(action).valid) {
+              gameui.game.handleAction(action);
+              gameui.update();
+
+              this.visible = false;
+            }
+          }
         },
       })
     );
@@ -99,9 +132,14 @@ class YearPlenty extends PIXI.Container implements Updatable {
     }
   }
 
+  // reset stuff back to 0
   private clearPrevious() {
-    this.removeChildren();
-    this.addChild(new Box(0, 0, this.widthBox, this.heightBox));
+    this.selectedResources = [];
+    this.offer = new SETTLERS.ResourceBundle();
+    const CARD_TYPES = SETTLERS.NUM_RESOURCE_TYPES;
+    for (let i = 0; i < CARD_TYPES; i++) {
+      this.offerText[i].text = 0;
+    }
   }
 
   update() {
@@ -117,7 +155,7 @@ class YearPlenty extends PIXI.Container implements Updatable {
     this.visible = true;
 
     // clear previous, old resources
-    // this.clearPrevious();
+    this.clearPrevious();
   }
 
   _onclick() {
@@ -133,7 +171,7 @@ class YearPlenty extends PIXI.Container implements Updatable {
       SETTLERS.ActionType.SelectYearOfPlentyResources,
       this.gameui.game.getTurn(),
       {
-        /* TODO */
+        resources: this.selectedResources,
       }
     );
   }
