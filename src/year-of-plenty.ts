@@ -133,7 +133,7 @@ class YearPlenty extends PIXI.Container implements Updatable {
   }
 
   // reset stuff back to 0
-  private clearPrevious() {
+  private reset() {
     this.selectedResources = [];
     this.offer = new SETTLERS.ResourceBundle();
     const CARD_TYPES = SETTLERS.NUM_RESOURCE_TYPES;
@@ -151,11 +151,11 @@ class YearPlenty extends PIXI.Container implements Updatable {
       return;
     }
 
+    // clear previous, old resources
+    this.reset();
+
     // make ui visible
     this.visible = true;
-
-    // clear previous, old resources
-    this.clearPrevious();
   }
 
   _onclick() {

@@ -62,8 +62,10 @@ class GameUI {
     
     game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
     game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
+    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly);
+    game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly);
     //
-    
+
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
