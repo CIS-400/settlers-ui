@@ -48,6 +48,7 @@ class GameUI {
     game.currPlayer.devCards.add(SETTLERS.DevCard.Knight);
     game.currPlayer.devCards.add(SETTLERS.DevCard.Knight);
     game.currPlayer.devCards.add(SETTLERS.DevCard.Knight);
+    game.currPlayer.devCards.add(SETTLERS.DevCard.RoadBuilder);
     //
 
     this.perspective = game.getTurn();
@@ -233,9 +234,13 @@ class GameUI {
         require("../assets/resource_cards/back_card.png")
       ),
       large_army: await PIXI.Assets.load(require("../assets/largest_army.png")),
-      large_army_gold: await PIXI.Assets.load(require("../assets/largest_army_gold.png")),
+      large_army_gold: await PIXI.Assets.load(
+        require("../assets/largest_army_gold.png")
+      ),
       long_road: await PIXI.Assets.load(require("../assets/longest_road.png")),
-      long_road_gold: await PIXI.Assets.load(require("../assets/longest_road_gold.png")),
+      long_road_gold: await PIXI.Assets.load(
+        require("../assets/longest_road_gold.png")
+      ),
 
       // cards
       brick_card: await PIXI.Assets.load(

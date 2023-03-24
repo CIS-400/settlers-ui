@@ -88,7 +88,8 @@ class Inventory extends PIXI.Container implements Updatable {
         text = new PIXI.Text(
           game.players[persp].devCards.get(c) + persp === game.getTurn()
             ? game.purchasedCards.get(c)
-            : 0, {
+            : 0,
+          {
             fontFamily: "Arial",
             fontSize: 18,
             fill: 0x000000,
@@ -143,19 +144,19 @@ class Inventory extends PIXI.Container implements Updatable {
       case SETTLERS.DevCard.YearOfPlenty:
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayYearOfPlenty,
-          this.gameui.game.getTurn(),
+          this.gameui.getPerspective(),
           {}
         );
       case SETTLERS.DevCard.Monopoly:
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayMonopoly,
-          this.gameui.game.getTurn(),
+          this.gameui.getPerspective(),
           {}
         );
       default: // road builder case
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayRoadBuilder,
-          this.gameui.game.getTurn(),
+          this.gameui.getPerspective(),
           {}
         );
     }
