@@ -129,22 +129,12 @@ class Inventory extends PIXI.Container implements Updatable {
     const action = this.getPotentialAction(devCard);
     if (!game.isValidAction(action).valid) return;
     game.handleAction(action);
-<<<<<<< HEAD
-    console.log("BEFORE UPDATED!!!!!!!!!");
     this.gameui.update();
-    console.log("UPDATED!!!!!!!!!");
-=======
-    this.gameui.update();
->>>>>>> 95049d5 (fix gold images)
   }
 
   private getPotentialAction(devCard: SETTLERS.DevCard) {
     switch (devCard) {
       case SETTLERS.DevCard.Knight:
-<<<<<<< HEAD
-        console.log("knight played");
-=======
->>>>>>> 95049d5 (fix gold images)
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayRobber,
           this.gameui.game.getTurn(),
