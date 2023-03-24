@@ -169,7 +169,7 @@ class YearPlenty extends PIXI.Container implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.SelectYearOfPlentyResources,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       {
         resources: this.selectedResources,
       }

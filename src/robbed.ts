@@ -51,7 +51,7 @@ class Robbed extends PIXI.Container implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.Rob,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       { victim: this.chosenVictim }
     );
   }

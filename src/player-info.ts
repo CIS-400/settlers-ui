@@ -144,11 +144,14 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       // update text
       this.victoryPText[i].text = player.victoryPoints;
       this.numCardsText[i].text = player.resources.size();
-      this.devCardsText[i].text = player.devCards.size();
+      this.devCardsText[i].text =
+        player.devCards.size() +
+        (this.gameui.getPerspective() === this.gameui.game.getTurn()
+          ? this.gameui.game.purchasedCards.size()
+          : 0);
       this.knightsText[i].text = player.knightsPlayed;
       this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i);
       this.pfps[i].alpha = this.gameui.game.getTurn() === i ? 1 : 0.3;
-
 
       // update who has largest army/road
       this.roadsImage[i].texture =

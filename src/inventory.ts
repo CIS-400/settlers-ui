@@ -86,10 +86,9 @@ class Inventory extends PIXI.Container implements Updatable {
         const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
         const persp = gameui.getPerspective();
         text = new PIXI.Text(
-          game.players[persp].devCards.get(c) + persp === game.getTurn()
+          game.players[persp].devCards.get(c) + (persp === game.getTurn()
             ? game.purchasedCards.get(c)
-            : 0,
-          {
+            : 0), {
             fontFamily: "Arial",
             fontSize: 18,
             fill: 0x000000,
@@ -117,10 +116,10 @@ class Inventory extends PIXI.Container implements Updatable {
         const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
         const persp = this.gameui.getPerspective();
         this.cardCountText[i].text =
-          this.gameui.game.players[persp].devCards.get(c) + persp ===
+          this.gameui.game.players[persp].devCards.get(c) + (persp ===
           this.gameui.game.getTurn()
             ? this.gameui.game.purchasedCards.get(c)
-            : 0;
+            : 0);
       }
     }
   }

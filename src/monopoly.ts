@@ -88,7 +88,7 @@ class Monopoly extends PIXI.Container implements Updatable {
   private getPotentialAction() {
     return new SETTLERS.Action(
       SETTLERS.ActionType.SelectMonopolyResource,
-      this.gameui.game.getTurn(),
+      this.gameui.getPerspective(),
       { resource: this.chosenResource }
     );
   }
