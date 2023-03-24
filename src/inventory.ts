@@ -78,10 +78,12 @@ class Inventory extends PIXI.Container implements Updatable {
         }
 
         // text stuff
+        const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
+        const persp = gameui.getPerspective();
         text = new PIXI.Text(
-          game.players[gameui.getPerspective()].devCards.get(
-            (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard
-          )
+          game.players[persp].devCards.get(c) + persp === game.getTurn()
+            ? game.purchasedCards.get(c)
+            : 0
         );
       }
       card!.position.set(x, height / 5);
@@ -102,9 +104,13 @@ class Inventory extends PIXI.Container implements Updatable {
           this.gameui.getPerspective()
         ].resources.get(i as SETTLERS.Resource);
       } else {
-        this.cardCountText[i].text = this.gameui.game.players[
-          this.gameui.getPerspective()
-        ].devCards.get((i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard);
+        const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
+        const persp = this.gameui.getPerspective();
+        this.cardCountText[i].text =
+          this.gameui.game.players[persp].devCards.get(c) + persp ===
+          this.gameui.game.getTurn()
+            ? this.gameui.game.purchasedCards.get(c)
+            : 0;
       }
     }
   }
@@ -114,15 +120,15 @@ class Inventory extends PIXI.Container implements Updatable {
     const action = this.getPotentialAction(devCard);
     if (!game.isValidAction(action).valid) return;
     game.handleAction(action);
-    console.log('BEFORE UPDATED!!!!!!!!!')
+    console.log("BEFORE UPDATED!!!!!!!!!");
     this.gameui.update();
-    console.log('UPDATED!!!!!!!!!')
+    console.log("UPDATED!!!!!!!!!");
   }
 
   private getPotentialAction(devCard: SETTLERS.DevCard) {
     switch (devCard) {
       case SETTLERS.DevCard.Knight:
-        console.log('knight played')
+        console.log("knight played");
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayRobber,
           this.gameui.game.getTurn(),
