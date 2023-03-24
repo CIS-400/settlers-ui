@@ -41,25 +41,6 @@ class GameUI {
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
     // TODO, DELETE. FOR TESTING
-    game.tradeOffers.push(
-      new SETTLERS.TradeOffer(
-        0,
-        0,
-        0,
-        new SETTLERS.ResourceBundle([1, 1, 0, 1, 0]),
-        new SETTLERS.ResourceBundle([0, 0, 3, 1, 0])
-      )
-    );
-    game.tradeOffers.push(
-      new SETTLERS.TradeOffer(
-        1,
-        0,
-        1,
-        new SETTLERS.ResourceBundle([1, 0, 0, 0, 1]),
-        new SETTLERS.ResourceBundle([0, 0, 0, 1, 1])
-      )
-    );
-    
     game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
     game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
     game.currPlayer.devCards.add(SETTLERS.DevCard.Monopoly);

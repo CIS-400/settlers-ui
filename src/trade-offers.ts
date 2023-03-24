@@ -18,6 +18,7 @@ class TradeOffers extends PIXI.Container implements Updatable {
     this.position.set(x_offset, y_offset);
   }
   update() {
+    this.tradeOffers.map((tradeOffer) => this.removeChild(tradeOffer));
     this.tradeOffers = [];
     this.gameui.game.getTradeOffers().map((tradeOffer) => {
       const s = new TradeOffer(
@@ -64,9 +65,9 @@ class TradeOffer extends PIXI.Container implements Updatable {
     // others
     const statuses = Object.entries(tradeOffer.status);
     for (let i = 0; i < statuses.length; i++) {
-      const pfp = new PIXI.Sprite(
-        this.gameui.textures[`player_icon${Number(statuses[i][0])}`]
-      );
+      const status = statuses[i][1];
+      const player = Number(statuses[i][0]);
+      const pfp = new PIXI.Sprite(this.gameui.textures[`player_icon${player}`]);
       pfp.width = pfp_width;
       pfp.height = pfp_width;
       pfp.anchor.set(0, 0.5);
@@ -75,6 +76,19 @@ class TradeOffer extends PIXI.Container implements Updatable {
         y + cont_height / 2
       );
       this.addChild(pfp);
+      if (status !== SETTLERS.TradeStatus.Pending) {
+        const statusIcon = new PIXI.Sprite(
+          this.gameui.textures[
+            `${status === SETTLERS.TradeStatus.Accept ? "accept" : "decline"}`
+          ]
+        );
+        statusIcon.scale.set(0.8);
+        statusIcon.position.set(pfp.position.x, pfp.position.y);
+        this.addChild(statusIcon);
+        pfp.interactive = true;
+        console.log("here");
+        pfp.on("click", () => this.decideOnTradeOffer(status, player));
+      }
     }
 
     let card_x = offerer.x + offerer.width;
@@ -110,18 +124,21 @@ class TradeOffer extends PIXI.Container implements Updatable {
       text.position.set(card.x + card.width / 3, card.y + 1.4 * card.height);
       this.addChild(card, text);
     }
-    const acceptIcon = new PIXI.Sprite(gameui.textures["accept"]);
-    acceptIcon.scale.set(0.8);
-    this.addChild(
-      new Button({
-        x: x + 0.4 * width,
-        y: y,
-        width: 0.1 * width,
-        height: cont_height,
-        content: acceptIcon,
-        onclick: () => this.decideOnTradeOffer(SETTLERS.TradeStatus.Accept),
-      })
-    );
+    // if not offerer, add accept option
+    if (tradeOffer.offerer !== this.gameui.getPerspective()) {
+      const acceptIcon = new PIXI.Sprite(gameui.textures["accept"]);
+      acceptIcon.scale.set(0.8);
+      this.addChild(
+        new Button({
+          x: x + 0.4 * width,
+          y: y,
+          width: 0.1 * width,
+          height: cont_height,
+          content: acceptIcon,
+          onclick: () => this.decideOnTradeOffer(SETTLERS.TradeStatus.Accept),
+        })
+      );
+    }
     const declineIcon = new PIXI.Sprite(gameui.textures["decline"]);
     declineIcon.scale.set(0.8);
     this.addChild(
@@ -136,7 +153,7 @@ class TradeOffer extends PIXI.Container implements Updatable {
     );
   }
   update() {}
-  decideOnTradeOffer(status: SETTLERS.TradeStatus) {
+  decideOnTradeOffer(status: SETTLERS.TradeStatus, withPlayer?: number) {
     const { game } = this.gameui;
     const action = new SETTLERS.Action(
       SETTLERS.ActionType.DecideOnTradeOffer,
@@ -144,8 +161,11 @@ class TradeOffer extends PIXI.Container implements Updatable {
       {
         status: status,
         id: this.tradeOffer.id,
+        withPlayer: withPlayer,
       }
     );
+    console.log(action);
+    console.log(game.isValidAction(action));
     if (game.isValidAction(action).valid) {
       game.handleAction(action);
       this.gameui.update();
