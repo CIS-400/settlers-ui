@@ -34,7 +34,12 @@ class Inventory extends PIXI.Container implements Updatable {
         text = new PIXI.Text(
           game.players[gameui.getPerspective()].resources.get(
             i as SETTLERS.Resource
-          )
+          ),
+          {
+            fontFamily: "Arial",
+            fontSize: 18,
+            fill: 0x000000,
+          }
         );
       } else {
         const devCard = i - SETTLERS.NUM_RESOURCE_TYPES;
@@ -83,7 +88,11 @@ class Inventory extends PIXI.Container implements Updatable {
         text = new PIXI.Text(
           game.players[persp].devCards.get(c) + persp === game.getTurn()
             ? game.purchasedCards.get(c)
-            : 0
+            : 0, {
+            fontFamily: "Arial",
+            fontSize: 18,
+            fill: 0x000000,
+          }
         );
       }
       card!.position.set(x, height / 5);
@@ -120,15 +129,22 @@ class Inventory extends PIXI.Container implements Updatable {
     const action = this.getPotentialAction(devCard);
     if (!game.isValidAction(action).valid) return;
     game.handleAction(action);
+<<<<<<< HEAD
     console.log("BEFORE UPDATED!!!!!!!!!");
     this.gameui.update();
     console.log("UPDATED!!!!!!!!!");
+=======
+    this.gameui.update();
+>>>>>>> 95049d5 (fix gold images)
   }
 
   private getPotentialAction(devCard: SETTLERS.DevCard) {
     switch (devCard) {
       case SETTLERS.DevCard.Knight:
+<<<<<<< HEAD
         console.log("knight played");
+=======
+>>>>>>> 95049d5 (fix gold images)
         return new SETTLERS.Action(
           SETTLERS.ActionType.PlayRobber,
           this.gameui.game.getTurn(),

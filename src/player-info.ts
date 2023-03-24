@@ -10,6 +10,9 @@ class PlayerInfo extends PIXI.Container implements Updatable {
   private knightsText: PIXI.Text[];
   private roadsText: PIXI.Text[];
   private pfps: PIXI.Sprite[];
+
+  private roadsImage: PIXI.Sprite[];
+  private knightsImage: PIXI.Sprite[];
   gameui: GameUI;
 
   constructor(gameui: GameUI) {
@@ -21,6 +24,8 @@ class PlayerInfo extends PIXI.Container implements Updatable {
     this.knightsText = [];
     this.roadsText = [];
 
+    this.roadsImage = [];
+    this.knightsImage = [];
     this.pfps = [];
 
     this.y = (GameUI.BOARD_HEIGHT_RATIO * gameui.app.view.height) / 8;
@@ -101,6 +106,8 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       y = height * index + 0.1 * height;
       largeArmy.position.set(x, y);
       this.addChild(largeArmy);
+      this.knightsImage.push(largeArmy);
+
       const knightsPlayed = new PIXI.Text(p.knightsPlayed, defaultFont);
       knightsPlayed.anchor.set(0.5, 0);
       knightsPlayed.position.set(x + largeArmy.width / 2, y + largeArmy.height);
@@ -119,6 +126,8 @@ class PlayerInfo extends PIXI.Container implements Updatable {
       y = height * index + 0.1 * height;
       longRoad.position.set(x, y);
       this.addChild(longRoad);
+      this.roadsImage.push(longRoad);
+
       const numLongestRoad = new PIXI.Text(
         gameui.game.board.getLongestRoad(index),
         defaultFont
@@ -132,12 +141,24 @@ class PlayerInfo extends PIXI.Container implements Updatable {
 
   update() {
     this.gameui.game.players.map((player, i) => {
+      // update text
       this.victoryPText[i].text = player.victoryPoints;
       this.numCardsText[i].text = player.resources.size();
       this.devCardsText[i].text = player.devCards.size();
       this.knightsText[i].text = player.knightsPlayed;
       this.roadsText[i].text = this.gameui.game.board.getLongestRoad(i);
       this.pfps[i].alpha = this.gameui.game.getTurn() === i ? 1 : 0.3;
+
+
+      // update who has largest army/road
+      this.roadsImage[i].texture =
+        this.gameui.textures[
+          `long_road${this.gameui.game.longestRoad.owner === i ? "_gold" : ""}`
+        ];
+      this.knightsImage[i].texture =
+        this.gameui.textures[
+          `large_army${this.gameui.game.largestArmy.owner === i ? "_gold" : ""}`
+        ];
     });
   }
 }

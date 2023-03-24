@@ -16,11 +16,11 @@ class Edge extends PIXI.Container implements Updatable {
     this.nodes = nodes;
     this.sprite = new PIXI.Sprite();
     this.sprite.anchor.set(0.5);
-    this.sprite.scale.set(0.9);
+    this.sprite.scale.set(0.6);
     this.sprite.rotation = this.getAngle(
       [nodes[0].x, nodes[0].y],
       [nodes[1].x, nodes[1].y]
-    );
+    ) + Math.PI / 2;
     this.hitArea = new PIXI.Circle(0, 0, 0.025 * width);
     this.on("click", this._onclick.bind(this));
     this.on("mouseenter", this._onmouseenter.bind(this));
