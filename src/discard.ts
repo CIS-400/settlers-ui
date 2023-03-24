@@ -106,6 +106,8 @@ class Discard extends PIXI.Container implements Updatable {
     if (this.gameui.game.getTurnState() !== SETTLERS.TurnState.Discarding) {
       this.toDiscard = new SETTLERS.ResourceBundle();
     }
+    this.reset();
+    
     this.visible =
       this.gameui.game.getTurnState() === SETTLERS.TurnState.Discarding &&
       this.gameui.game.getMustDiscard()[this.gameui.getPerspective()];
@@ -114,6 +116,11 @@ class Discard extends PIXI.Container implements Updatable {
       this.gameui.game.players[this.gameui.getPerspective()].resources.size() /
         2
     )} resources`;
+  }
+
+  reset() {
+    this.toDiscardText.map(text => text.text = 0);
+    this.toDiscard = new SETTLERS.ResourceBundle();
   }
 
   private makeArrow(

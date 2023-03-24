@@ -49,6 +49,8 @@ class GameUI {
     game.currPlayer.devCards.add(SETTLERS.DevCard.Knight);
     game.currPlayer.devCards.add(SETTLERS.DevCard.Knight);
     game.currPlayer.devCards.add(SETTLERS.DevCard.RoadBuilder);
+    for (let i = 0; i < 7; i++)
+      game.currPlayer.devCards.add(SETTLERS.DevCard.VictoryPoint);
     //
 
     this.perspective = game.getTurn();
