@@ -1,6 +1,6 @@
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Node from "./node";
 import Updatable from "./updatable";
 
@@ -17,10 +17,9 @@ class Edge extends PIXI.Container implements Updatable {
     this.sprite = new PIXI.Sprite();
     this.sprite.anchor.set(0.5);
     this.sprite.scale.set(0.6);
-    this.sprite.rotation = this.getAngle(
-      [nodes[0].x, nodes[0].y],
-      [nodes[1].x, nodes[1].y]
-    ) + Math.PI / 2;
+    this.sprite.rotation =
+      this.getAngle([nodes[0].x, nodes[0].y], [nodes[1].x, nodes[1].y]) +
+      Math.PI / 2;
     this.hitArea = new PIXI.Circle(0, 0, 0.025 * width);
     this.on("click", this._onclick.bind(this));
     this.on("mouseenter", this._onmouseenter.bind(this));
@@ -45,6 +44,7 @@ class Edge extends PIXI.Container implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction();
     if (!game.isValidAction(action).valid) return;
+    this.gameui.runEventHandlers(UIEvents.ClickEdge, action);
     game.handleAction(action);
     this.sprite.alpha = 1;
     this.gameui.update();

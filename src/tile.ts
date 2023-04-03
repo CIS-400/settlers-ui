@@ -1,6 +1,6 @@
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Node from "./node";
 import Updatable from "./updatable";
 
@@ -47,6 +47,7 @@ class Tile extends PIXI.Sprite implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction();
     if (!game.isValidAction(action).valid) return;
+    this.gameui.runEventHandlers(UIEvents.ClickNode, action);
     game.handleAction(action);
     this.gameui.update();
   }

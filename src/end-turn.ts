@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Updatable from "./updatable";
 
 class EndTurn extends PIXI.Sprite implements Updatable {
@@ -22,6 +22,7 @@ class EndTurn extends PIXI.Sprite implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction();
     if (!game.isValidAction(action).valid) return;
+    this.gameui.runEventHandlers(UIEvents.EndTurn, action);
     game.handleAction(action);
     this.gameui.update();
   }

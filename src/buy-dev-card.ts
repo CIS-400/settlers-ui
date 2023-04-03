@@ -1,7 +1,7 @@
 import Button from "./button";
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 
 class BuyDevCard extends PIXI.Container {
   readonly gameui: GameUI;
@@ -34,7 +34,8 @@ class BuyDevCard extends PIXI.Container {
       {}
     );
     if (game.isValidAction(action).valid) {
-      game.handleAction(action);
+      const resultAction = game.handleAction(action);
+      this.gameui.runEventHandlers(UIEvents.BuyDevCard, resultAction!);
       this.gameui.update();
     }
   }

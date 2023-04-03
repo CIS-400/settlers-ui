@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Updatable from "./updatable";
 
 class Dice extends PIXI.Container implements Updatable {
@@ -34,7 +34,8 @@ class Dice extends PIXI.Container implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction();
     if (!game.isValidAction(action).valid) return;
-    game.handleAction(action);
+    const resultAction = game.handleAction(action);
+    this.gameui.runEventHandlers(UIEvents.RollDice, resultAction!);
     this.gameui.update();
   }
 

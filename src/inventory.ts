@@ -1,6 +1,6 @@
 import * as SETTLERS from "settlers";
 import * as PIXI from "pixi.js";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Box from "./box";
 import Updatable from "./updatable";
 
@@ -86,9 +86,9 @@ class Inventory extends PIXI.Container implements Updatable {
         const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
         const persp = gameui.getPerspective();
         text = new PIXI.Text(
-          game.players[persp].devCards.get(c) + (persp === game.getTurn()
-            ? game.purchasedCards.get(c)
-            : 0), {
+          game.players[persp].devCards.get(c) +
+            (persp === game.getTurn() ? game.purchasedCards.get(c) : 0),
+          {
             fontFamily: "Arial",
             fontSize: 18,
             fill: 0x000000,
@@ -116,8 +116,8 @@ class Inventory extends PIXI.Container implements Updatable {
         const c = (i - SETTLERS.NUM_RESOURCE_TYPES) as SETTLERS.DevCard;
         const persp = this.gameui.getPerspective();
         this.cardCountText[i].text =
-          this.gameui.game.players[persp].devCards.get(c) + (persp ===
-          this.gameui.game.getTurn()
+          this.gameui.game.players[persp].devCards.get(c) +
+          (persp === this.gameui.game.getTurn()
             ? this.gameui.game.purchasedCards.get(c)
             : 0);
       }
@@ -128,6 +128,7 @@ class Inventory extends PIXI.Container implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction(devCard);
     if (!game.isValidAction(action).valid) return;
+    this.gameui.runEventHandlers(UIEvents.PlayDevCard, action);
     game.handleAction(action);
     this.gameui.update();
   }

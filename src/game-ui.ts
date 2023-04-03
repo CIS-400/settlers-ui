@@ -52,7 +52,10 @@ class GameUI {
     game.currPlayer.devCards.add(SETTLERS.DevCard.RoadBuilder);
     for (let i = 0; i < 7; i++)
       game.currPlayer.devCards.add(SETTLERS.DevCard.VictoryPoint);
-    this.eventHandlers = {};
+    this.eventHandlers = {} as Record<
+      UIEvents,
+      Array<(action: SETTLERS.Action) => void>
+    >;
     for (const event of Object.values(UIEvents)) {
       this.eventHandlers[event] = [];
     }
