@@ -2,10 +2,12 @@
   "name": "settlers-ui",
   "version": "1.0.0",
   "description": "npm module for rendering a game state.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "dist": "rm -rf dist && mkdir dist && tsc --project dist_tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -18,9 +20,11 @@
   },
   "homepage": "https://github.com/CIS-400/settlers-ui#readme",
   "dependencies": {
-    "pixi.js": "^7.1.1"
+    "pixi.js": "^7.1.1",
+    "settlers": "^1.0.2"
   },
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "@types/pixi.js": "^5.0.0",
     "parcel": "^2.8.3",
     "parcel-bundler": "^1.6.1",

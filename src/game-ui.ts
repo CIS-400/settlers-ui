@@ -24,19 +24,19 @@ class GameUI {
   readonly app: PIXI.Application<PIXI.ICanvas>;
   private perspective: number;
   followTurnPerspective: boolean;
-  bank: Bank;
-  board: Board;
-  inventory: Inventory;
-  dice: Dice;
-  endTurn: EndTurn;
-  playerInfo: PlayerInfo;
-  monopoly: Monopoly;
-  robbed: Robbed;
-  tradeOfferStagingArea: TradeOfferStagingArea;
-  discard: Discard;
-  tradeOffers: TradeOffers;
-  yearPlenty: YearPlenty;
-  textures: Record<string, any>;
+  bank!: Bank;
+  board!: Board;
+  inventory!: Inventory;
+  dice!: Dice;
+  endTurn!: EndTurn;
+  playerInfo!: PlayerInfo;
+  monopoly!: Monopoly;
+  robbed!: Robbed;
+  tradeOfferStagingArea!: TradeOfferStagingArea;
+  discard!: Discard;
+  tradeOffers!: TradeOffers;
+  yearPlenty!: YearPlenty;
+  textures!: Record<string, any>;
   eventHandlers: Record<UIEvents, Array<(action: SETTLERS.Action) => void>>;
 
   constructor(game: Game, container: HTMLElement) {
@@ -57,7 +57,7 @@ class GameUI {
       Array<(action: SETTLERS.Action) => void>
     >;
     for (const event of Object.values(UIEvents)) {
-      this.eventHandlers[event] = [];
+      this.eventHandlers[event as UIEvents] = [];
     }
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;

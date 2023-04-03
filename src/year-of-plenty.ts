@@ -54,10 +54,10 @@ class YearPlenty extends PIXI.Container implements Updatable {
 
           // YEAR of Plenty needs 2 resources
           if (sum === 2) {
-            const resources = this.offer.bundle.reduce((acc, cur, index) => {
-              if (cur !== 0) acc.push(index);
-              return acc;
-            }, []);
+            const resources = this.offer.bundle.reduce<number[]>(
+              (acc, cur, index) => (cur !== 0 ? acc : [...acc, index]),
+              []
+            );
 
             // got 1 type or 2 types of resources?
             if (resources.length === 1) {
@@ -195,10 +195,10 @@ class YearPlenty extends PIXI.Container implements Updatable {
     arrow.interactive = true;
     arrow.on("click", onclick);
     arrow.alpha = 0.5;
-    arrow.on("mouseenter", function () {
+    arrow.on("mouseenter", () => {
       this.alpha = 1;
     });
-    arrow.on("mouseleave", function () {
+    arrow.on("mouseleave", () => {
       this.alpha = 0.5;
     });
     arrow.position.set(

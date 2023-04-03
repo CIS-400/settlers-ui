@@ -202,10 +202,10 @@ class TradeOfferStagingArea extends PIXI.Container {
     arrow.interactive = true;
     arrow.on("click", onclick);
     arrow.alpha = 0.5;
-    arrow.on("mouseenter", function () {
+    arrow.on("mouseenter", () => {
       this.alpha = 1;
     });
-    arrow.on("mouseleave", function () {
+    arrow.on("mouseleave", () => {
       this.alpha = 0.5;
     });
     arrow.position.set(

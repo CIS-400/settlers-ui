@@ -8,7 +8,7 @@ class Robbed extends PIXI.Container implements Updatable {
   gameui: GameUI;
   private widthBox: number;
   private heightBox: number;
-  private chosenVictim: number;
+  private chosenVictim!: number;
 
   constructor(gameui: GameUI) {
     super();

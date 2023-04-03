@@ -8,7 +8,7 @@ class Monopoly extends PIXI.Container implements Updatable {
   gameui: GameUI;
   private widthBox: number;
   private heightBox: number;
-  private chosenResource: SETTLERS.Resource;
+  private chosenResource!: SETTLERS.Resource;
 
   constructor(gameui: GameUI) {
     super();

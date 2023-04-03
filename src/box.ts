@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 class Box extends PIXI.Graphics {
   static FILL = 0xfff4c8;
   static BORDER = 0x563440;
-  constructor(x, y, width, height) {
+  constructor(x: number, y: number, width: number, height: number) {
     super();
     this.beginFill(Box.BORDER);
     this.drawRoundedRect(x, y, width, height, 5);

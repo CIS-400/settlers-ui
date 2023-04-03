@@ -107,7 +107,7 @@ class Discard extends PIXI.Container implements Updatable {
       this.toDiscard = new SETTLERS.ResourceBundle();
     }
     this.reset();
-    
+
     this.visible =
       this.gameui.game.getTurnState() === SETTLERS.TurnState.Discarding &&
       this.gameui.game.getMustDiscard()[this.gameui.getPerspective()];
@@ -119,7 +119,7 @@ class Discard extends PIXI.Container implements Updatable {
   }
 
   reset() {
-    this.toDiscardText.map(text => text.text = 0);
+    this.toDiscardText.map((text) => (text.text = 0));
     this.toDiscard = new SETTLERS.ResourceBundle();
   }
 
@@ -141,10 +141,10 @@ class Discard extends PIXI.Container implements Updatable {
     arrow.interactive = true;
     arrow.on("click", onclick);
     arrow.alpha = 0.5;
-    arrow.on("mouseenter", function () {
+    arrow.on("mouseenter", () => {
       this.alpha = 1;
     });
-    arrow.on("mouseleave", function () {
+    arrow.on("mouseleave", () => {
       this.alpha = 0.5;
     });
     arrow.position.set(
