@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
 import Box from "./box";
 import Button from "./button";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 
 class TradeOfferStagingArea extends PIXI.Container {
   readonly gameui: GameUI;
@@ -152,6 +152,7 @@ class TradeOfferStagingArea extends PIXI.Container {
     );
     if (game.isValidAction(action).valid) {
       game.handleAction(action);
+      this.gameui.runEventHandlers(UIEvents.MakeTradeOffer, action);
       this.reset();
       this.gameui.update();
     }
@@ -172,6 +173,7 @@ class TradeOfferStagingArea extends PIXI.Container {
     );
     if (game.isValidAction(action).valid) {
       game.handleAction(action);
+      this.gameui.runEventHandlers(UIEvents.Exchange, action);
       this.reset();
       this.gameui.update();
     }

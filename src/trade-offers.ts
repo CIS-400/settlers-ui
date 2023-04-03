@@ -1,7 +1,7 @@
 import Box from "./box";
 import Updatable from "./updatable";
 import * as PIXI from "pixi.js";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import * as SETTLERS from "settlers";
 import Button from "./button";
 
@@ -167,6 +167,7 @@ class TradeOffer extends PIXI.Container implements Updatable {
     console.log(action);
     console.log(game.isValidAction(action));
     if (game.isValidAction(action).valid) {
+      this.gameui.runEventHandlers(UIEvents.DecideOnTradeOffer, action);
       game.handleAction(action);
       this.gameui.update();
     }

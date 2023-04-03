@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
 import Box from "./box";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Updatable from "./updatable";
 
 class Robbed extends PIXI.Container implements Updatable {
@@ -44,6 +44,7 @@ class Robbed extends PIXI.Container implements Updatable {
     const { game } = this.gameui;
     const action = this.getPotentialAction();
     if (!game.isValidAction(action).valid) return;
+    this.gameui.runEventHandlers(UIEvents.SelectRobberVictim, action);
     game.handleAction(action);
     this.gameui.update();
   }

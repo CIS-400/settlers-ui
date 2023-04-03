@@ -332,6 +332,7 @@ export enum UIEvents {
   BuyDevCard,
   PlayDevCard,
   EndTurn,
+  Exchange,
   MakeTradeOffer,
   DecideOnTradeOffer,
   Discard,
