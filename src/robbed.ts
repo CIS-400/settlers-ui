@@ -59,6 +59,7 @@ class Robbed extends PIXI.Container implements Updatable {
   update() {
     // check if in robbing state
     if (this.gameui.game.getTurnState() !== SETTLERS.TurnState.Robbing) {
+      this.visible = false;
       return;
     }
 

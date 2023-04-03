@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as SETTLERS from "settlers";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 import Updatable from "./updatable";
 class Node extends PIXI.Container implements Updatable {
   readonly gameui: GameUI;
@@ -45,6 +45,7 @@ class Node extends PIXI.Container implements Updatable {
     const action = this.getPotentialAction();
     if (!game.isValidAction(action)) return;
     game.handleAction(action);
+    this.gameui.runEventHandlers(UIEvents.ClickNode, action);
     this.gameui.update();
   }
 

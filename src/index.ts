@@ -1,11 +1,14 @@
 import * as PIXI from "pixi.js";
 
 import { Game } from "settlers";
-import GameUI from "./game-ui";
+import GameUI, { UIEvents } from "./game-ui";
 
 async function init() {
   const pixiContainer = document.getElementById("pixi-container")!;
   const gameui = new GameUI(new Game(), pixiContainer);
+  gameui.addEventHandler(UIEvents.ClickNode, (action) => {
+    console.log("would send server action", action);
+  });
   pixiContainer.appendChild(gameui.getUI());
   const radios = document.getElementsByName("perspective");
   let persp = 0;

@@ -37,6 +37,7 @@ class GameUI {
   tradeOffers: TradeOffers;
   yearPlenty: YearPlenty;
   textures: Record<string, any>;
+  eventHandlers: Record<UIEvents, Array<(action: SETTLERS.Action) => void>>;
 
   constructor(game: Game, container: HTMLElement) {
     this.game = game;
@@ -51,8 +52,10 @@ class GameUI {
     game.currPlayer.devCards.add(SETTLERS.DevCard.RoadBuilder);
     for (let i = 0; i < 7; i++)
       game.currPlayer.devCards.add(SETTLERS.DevCard.VictoryPoint);
-    //
-
+    this.eventHandlers = {};
+    for (const event of Object.values(UIEvents)) {
+      this.eventHandlers[event] = [];
+    }
     this.perspective = game.getTurn();
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
@@ -305,6 +308,31 @@ class GameUI {
       ),
     };
   }
+
+  addEventHandler(event: UIEvents, handler: (action: SETTLERS.Action) => void) {
+    this.eventHandlers[event].push(handler);
+  }
+  runEventHandlers(event: UIEvents, action: SETTLERS.Action) {
+    for (const handler of this.eventHandlers[event]) {
+      handler(action);
+    }
+  }
 }
 
 export default GameUI;
+
+export enum UIEvents {
+  ClickNode,
+  ClickEdge,
+  ClickTile,
+  RollDice,
+  BuyDevCard,
+  PlayDevCard,
+  EndTurn,
+  MakeTradeOffer,
+  DecideOnTradeOffer,
+  Discard,
+  SelectYearOfPlentyResources,
+  SelectMonopolyResource,
+  SelectRobberVictim,
+}
