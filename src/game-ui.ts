@@ -324,9 +324,7 @@ class GameUI {
   }
 }
 
-export default GameUI;
-
-export enum UIEvents {
+enum UIEvents {
   ClickNode,
   ClickEdge,
   ClickTile,
@@ -342,3 +340,7 @@ export enum UIEvents {
   SelectMonopolyResource,
   SelectRobberVictim,
 }
+
+export { UIEvents, GameUI };
+
+export default GameUI;

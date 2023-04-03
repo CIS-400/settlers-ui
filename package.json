@@ -7,7 +7,7 @@
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html",
-    "dist": "rm -rf dist && mkdir dist && tsc --project dist_tsconfig.json"
+    "dist": "rm -rf dist && mkdir dist && parcel build ./src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
     "settlers": "^1.0.2"
   },
   "devDependencies": {
+    "@parcel/packager-ts": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
     "@types/node": "^18.15.11",
     "@types/pixi.js": "^5.0.0",
     "parcel": "^2.8.3",
