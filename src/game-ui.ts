@@ -39,7 +39,7 @@ class GameUI {
   textures!: Record<string, any>;
   eventHandlers: Record<UIEvents, Array<(action: SETTLERS.Action) => void>>;
 
-  constructor(game: Game, container: HTMLElement) {
+  constructor(game: Game) {
     this.game = game;
     // TODO, DELETE. FOR TESTING
     game.currPlayer.devCards.add(SETTLERS.DevCard.YearOfPlenty);
@@ -63,7 +63,6 @@ class GameUI {
     this.followTurnPerspective = true;
     this.app = new PIXI.Application({
       backgroundColor: "#78bac2",
-      resizeTo: container,
     });
     this.initialize = this.initialize.bind(this);
     this.loadTextures().then((textures) => {
@@ -319,6 +318,9 @@ class GameUI {
     for (const handler of this.eventHandlers[event]) {
       handler(action);
     }
+  }
+  setResizeTo(container: HTMLElement) {
+    this.app.renderer.resize(container.clientWidth, container.clientHeight);
   }
 }
 
