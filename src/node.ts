@@ -67,6 +67,9 @@ class Node extends PIXI.Container implements Updatable {
     const n: SETTLERS.Node = game.getNode(this.id);
     const p = n.getPlayer();
     if (!game.isValidAction(this.getPotentialAction()).valid) return;
+
+    this.sprite.alpha = 1;
+    
     if (n.hasCity()) {
       this.sprite.texture = this.gameui.textures[`city_${p}`];
     } else if (!n.isEmpty()) {
