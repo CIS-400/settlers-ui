@@ -15,6 +15,7 @@ import BuyDevCard from "./buy-dev-card";
 import Discard from "./discard";
 import TradeOffers from "./trade-offers";
 import YearPlenty from "./year-of-plenty";
+import brick_tile from "../assets/tiles/brick_tile.png";
 
 class GameUI {
   static DEFAULT_WIDTH = 1000;
@@ -169,9 +170,7 @@ class GameUI {
   async loadTextures() {
     return {
       // tiles
-      brick_tile: await PIXI.Assets.load(
-        require("../assets/tiles/brick_tile.png")
-      ),
+      brick_tile: await PIXI.Assets.load(brick_tile),
       none_tile: await PIXI.Assets.load(
         require("../assets/tiles/desert_without_robber.png")
       ),
